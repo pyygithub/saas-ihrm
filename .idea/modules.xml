@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ihrm-common/ihrm-common.iml" filepath="$PROJECT_DIR$/ihrm-common/ihrm-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ihrm-common-model/ihrm-common-model.iml" filepath="$PROJECT_DIR$/ihrm-common-model/ihrm-common-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ihrm-company/ihrm-company.iml" filepath="$PROJECT_DIR$/ihrm-company/ihrm-company.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pyy_project.iml" filepath="$PROJECT_DIR$/.idea/pyy_project.iml" />
+    </modules>
+  </component>
+</project>

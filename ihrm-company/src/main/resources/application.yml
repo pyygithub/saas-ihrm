@@ -1,0 +1,10 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: ihrm-company #指定服务名
+  profiles:
+    active: dev
+
+
