@@ -21,7 +21,7 @@
     </properties>
 
     <dependencies>
-        <!-- 引入 ihrm-common -->
+        <!-- 引入 iconstantsmmon -->
         <dependency>
             <groupId>com.pyy.ihrm</groupId>
             <artifactId>ihrm-common</artifactId>

@@ -27,10 +27,17 @@
     </properties>
 
     <dependencies>
-        <!-- 引入 ihrm-common -->
+        <!-- 引入 iconstantsmmon -->
         <dependency>
             <groupId>com.pyy.ihrm</groupId>
             <artifactId>ihrm-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 引入 iconstantsmmon-model -->
+        <dependency>
+            <groupId>com.pyy.ihrm</groupId>
+            <artifactId>ihrm-common-model</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

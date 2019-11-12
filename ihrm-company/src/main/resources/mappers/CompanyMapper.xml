@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pyy.ihrm.company.mapper.CompanyMapper">
+
+  <resultMap id="BaseResultMap" type="com.pyy.ihrm.company.po.Company">
+	<id column="id" jdbcType="VARCHAR" property="id" />
+	<result column="name" jdbcType="VARCHAR" property="name" />
+	<result column="balance" jdbcType="DECIMAL" property="balance" />
+	<result column="state" jdbcType="TINYINT" property="state" />
+	<result column="audit_state" jdbcType="VARCHAR" property="auditState" />
+	<result column="remarks" jdbcType="LONGVARCHAR" property="remarks" />
+	<result column="industry" jdbcType="VARCHAR" property="industry" />
+	<result column="company_size" jdbcType="VARCHAR" property="companySize" />
+	<result column="mailbox" jdbcType="VARCHAR" property="mailbox" />
+	<result column="company_phone" jdbcType="VARCHAR" property="companyPhone" />
+	<result column="legal_representative" jdbcType="VARCHAR" property="legalRepresentative" />
+	<result column="business_license_id" jdbcType="VARCHAR" property="businessLicenseId" />
+	<result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+	<result column="company_area" jdbcType="VARCHAR" property="companyArea" />
+	<result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
+	<result column="renewal_date" jdbcType="TIMESTAMP" property="renewalDate" />
+	<result column="version" jdbcType="VARCHAR" property="version" />
+	<result column="manager_id" jdbcType="VARCHAR" property="managerId" />
+	<result column="create_id" jdbcType="VARCHAR" property="createId" />
+	<result column="create_name" jdbcType="VARCHAR" property="createName" />
+	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	<result column="update_id" jdbcType="VARCHAR" property="updateId" />
+	<result column="update_name" jdbcType="VARCHAR" property="updateName" />
+	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	<result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+   id, name, balance, state, audit_state, remarks, industry, company_size, mailbox, company_phone, legal_representative,
+   business_license_id, company_address, company_area, expiration_date, renewal_date, version, manager_id, create_id,
+   create_name, create_time, update_id, update_name, update_time, is_deleted
+  </sql>
+
+
+  <select id="selectByPageAndParam" parameterType="com.pyy.ihrm.domain.company.vo.CompanyQueryConditionVO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from company t
+    where
+      t.is_deleted = '0'
+      <if test="name != null">
+        <!-- 根据具体业务调整模糊查询条件 -->
+        and t.name like '%'||#{name}||'%'
+      </if>
+  </select>
+  
+</mapper>
