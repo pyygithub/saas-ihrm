@@ -57,6 +57,8 @@ public class CompanyServiceImpl implements CompanyService {
         Company companyModel = new Company();
         BeanUtils.copyProperties(companySaveOrUpdateVO, companyModel);
         companyModel.setId(SnowflakeId.getId() + "");
+        companyModel.setAuditState(CommonConstants.UN_AUDITED);// 未审核
+        companyModel.setState(CommonConstants.ACTIVATED); // 已激活
         companyModel.setCreateId(companySaveOrUpdateVO.getUserId());
         companyModel.setCreateName(companySaveOrUpdateVO.getUsername());
         companyModel.setCreateTime(new Date());

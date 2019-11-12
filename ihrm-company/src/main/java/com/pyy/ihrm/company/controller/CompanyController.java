@@ -40,7 +40,7 @@ public class CompanyController {
      * @return
      */
     @ApiOperation(value = "保存企业信息", notes = "创建新企业信息")
-    @ApiImplicitParam(name = "record", value = "企业信息对象", required = true, dataType = "Company", paramType = "body")
+    @ApiImplicitParam(name = "record", value = "企业信息对象", required = true, dataType = "CompanySaveOrUpdateVO", paramType = "body")
     @PostMapping("/company")
     public Result save(@Valid @RequestBody CompanySaveOrUpdateVO record) {
         // 后面集成JWT后完善
@@ -62,7 +62,7 @@ public class CompanyController {
     @ApiOperation(value = "修改企业信息", notes = "根据ID修改企业信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "企业信息ID", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "record", value = "企业信息对象", required = true, dataType = "Company", paramType = "body")
+            @ApiImplicitParam(name = "record", value = "企业信息对象", required = true, dataType = "CompanySaveOrUpdateVO", paramType = "body")
     })
     @PutMapping("/company/{id}")
     public Result update(@Valid @PathVariable(value = "id") String id, @RequestBody CompanySaveOrUpdateVO record) {
@@ -126,8 +126,8 @@ public class CompanyController {
      */
     @ApiOperation(value = "企业信息分页查询", notes = "企业信息分页模糊查询")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "size", value = "分页尺寸", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "page", value = "当前页码", required = true, dataType = "Integer", paramType = "query"),
+            @ApiImplicitParam(name = "size", value = "分页尺寸", required = true, dataType = "Integer", paramType = "query")
     })
     @GetMapping("/companys/page")
     public Result<QueryResult<CompanyVO>> listByPageAndParams(CompanyQueryConditionVO queryConditionVO,
