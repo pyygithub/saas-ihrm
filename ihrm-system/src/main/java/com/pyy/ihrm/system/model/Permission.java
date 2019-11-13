@@ -1,4 +1,4 @@
-package com.pyy.ihrm.company.po;
+package com.pyy.ihrm.system.model;
 
 import lombok.Data;
 
@@ -7,34 +7,34 @@ import javax.persistence.Table;
 
 /**
  * ---------------------------
- * 部门 (Department)         
+ * 权限 (Permission)         
  * ---------------------------
- * 作者：  
- * 时间：  2019-11-13 10:03:44
+ * 作者：  pyy
+ * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
  */
 @Data
-@Table(name = "department")
-public class Department {
+@Table(name = "permission")
+public class Permission {
 
 	/** ID */
 	@Id
 	private String id;
-	/** 父级ID */
+	/** 父节点id */
 	private String parentId;
-	/** 企业ID */
+	/** 企业id */
 	private String companyId;
-	/** 部门编码 */
-	private String code;
-	/** 部门名称 */
+	/** 权限名称 */
 	private String name;
-	/** 负责人ID */
-	private String managerId;
-	/** 负责人名称 */
-	private String managerName;
-	/** 介绍 */
-	private String introduce;
+	/** 权限标识 */
+	private String code;
+	/** 权限类型: 1 菜单 2 功能 3 API */
+	private String type;
+	/** 权限描述 */
+	private String description;
+	/** 企业可见状态: 0 不可见 1 可见 */
+	private String enVisible;
 	/** 创建人ID */
 	private String createId;
 	/** 创建人名称 */

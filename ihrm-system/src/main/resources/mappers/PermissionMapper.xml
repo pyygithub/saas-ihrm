@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pyy.ihrm.system.mapper.PermissionMapper">
+
+  <resultMap id="BaseResultMap" type="com.pyy.ihrm.system.model.Permission">
+	<id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+	<result column="name" jdbcType="VARCHAR" property="name" />
+	<result column="code" jdbcType="VARCHAR" property="code" />
+	<result column="type" jdbcType="VARCHAR" property="type" />
+	<result column="description" jdbcType="VARCHAR" property="description" />
+	<result column="en_visible" jdbcType="VARCHAR" property="enVisible" />
+	<result column="create_id" jdbcType="VARCHAR" property="createId" />
+	<result column="create_name" jdbcType="VARCHAR" property="createName" />
+	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	<result column="update_id" jdbcType="VARCHAR" property="updateId" />
+	<result column="update_name" jdbcType="VARCHAR" property="updateName" />
+	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	<result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+      a.id,
+      a.parent_id,
+      a.company_id,
+      a.name,
+      a.code,
+      a.type,
+      a.description,
+      a.en_visible,
+      a.create_id,
+      a.create_name,
+      a.create_time,
+      a.update_id,
+      a.update_name,
+      a.update_time,
+      a.is_deleted
+  </sql>
+
+
+  <select id="selectByPageAndParam" parameterType="com.pyy.ihrm.domain.system.vo.PermissionQueryConditionVO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from permission a
+    where
+      a.is_deleted = 0
+      <if test="name != null">
+        and a.name like '%'||#{name}||'%'
+      </if>
+      <if test="companyId != null">
+        and a.company_id = #{companyId}
+      </if>
+      <if test="parentId != null">
+        and a.parent_id = #{parentId}
+      </if>
+      <if test="type != null">
+        and a.type = #{type}
+      </if>
+      <if test="enVisible != null">
+        and a.en_visible = #{enVisible}
+      </if>
+  </select>
+  
+</mapper>

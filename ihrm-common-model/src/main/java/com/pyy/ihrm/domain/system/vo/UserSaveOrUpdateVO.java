@@ -8,7 +8,7 @@ import lombok.Data;
  * ---------------------------
  * 用户 (User)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
@@ -17,10 +17,10 @@ import lombok.Data;
 @ApiModel(value = "UserSaveOrUpdateVO",description = "用户保存和修改VO类")
 public class UserSaveOrUpdateVO {
 
-	@ApiModelProperty("ID")
-	private String id;
 	@ApiModelProperty("工号")
 	private String workNumber;
+	@ApiModelProperty("企业ID")
+	private String companyId;
 	@ApiModelProperty("部门ID")
 	private String departmentId;
 	@ApiModelProperty("用户名称")

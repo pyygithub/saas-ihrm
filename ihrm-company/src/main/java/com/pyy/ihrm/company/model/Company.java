@@ -1,4 +1,4 @@
-package com.pyy.ihrm.company.po;
+package com.pyy.ihrm.company.model;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * ---------------------------
  * 企业信息 (Company)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-12 10:10:10
  * 版本：  v1.0
  * ---------------------------

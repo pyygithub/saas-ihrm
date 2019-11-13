@@ -9,9 +9,8 @@ import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.company.constants.CommonConstants;
 import com.pyy.ihrm.company.exception.CustomException;
 import com.pyy.ihrm.company.mapper.CompanyMapper;
-import com.pyy.ihrm.company.po.Company;
+import com.pyy.ihrm.company.model.Company;
 import com.pyy.ihrm.company.service.CompanyService;
-import com.pyy.ihrm.company.utils.UserUtil;
 import com.pyy.ihrm.domain.company.vo.CompanyQueryConditionVO;
 import com.pyy.ihrm.domain.company.vo.CompanySaveOrUpdateVO;
 import com.pyy.ihrm.domain.company.vo.CompanyVO;
@@ -34,7 +33,7 @@ import java.util.List;
  * ---------------------------
  * 企业信息 (CompanyServiceImpl)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-12 10:10:10
  * 版本：  v1.0
  * ---------------------------

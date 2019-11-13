@@ -8,7 +8,7 @@ import lombok.Data;
  * ---------------------------
  * 角色 (Role)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
@@ -17,8 +17,6 @@ import lombok.Data;
 @ApiModel(value = "RoleSaveOrUpdateVO",description = "角色保存和修改VO类")
 public class RoleSaveOrUpdateVO {
 
-	@ApiModelProperty("ID")
-	private String id;
 	@ApiModelProperty("企业id")
 	private String companyId;
 	@ApiModelProperty("说明")

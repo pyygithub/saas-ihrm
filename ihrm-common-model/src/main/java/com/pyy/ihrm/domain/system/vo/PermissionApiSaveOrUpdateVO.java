@@ -8,7 +8,7 @@ import lombok.Data;
  * ---------------------------
  * API接口权限 (PermissionApi)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
@@ -17,10 +17,6 @@ import lombok.Data;
 @ApiModel(value = "PermissionApiSaveOrUpdateVO",description = "API接口权限保存和修改VO类")
 public class PermissionApiSaveOrUpdateVO {
 
-	@ApiModelProperty("ID")
-	private String id;
-	@ApiModelProperty("权限ID")
-	private String permissionId;
 	@ApiModelProperty("链接")
 	private String apiUrl;
 	@ApiModelProperty("请求类型")

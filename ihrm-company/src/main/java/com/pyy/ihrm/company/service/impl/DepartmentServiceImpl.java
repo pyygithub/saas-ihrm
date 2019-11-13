@@ -1,15 +1,12 @@
 package com.pyy.ihrm.company.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.company.constants.CommonConstants;
 import com.pyy.ihrm.company.exception.CustomException;
 import com.pyy.ihrm.company.mapper.DepartmentMapper;
-import com.pyy.ihrm.company.po.Department;
+import com.pyy.ihrm.company.model.Department;
 import com.pyy.ihrm.company.service.CompanyService;
 import com.pyy.ihrm.company.service.DepartmentService;
 import com.pyy.ihrm.domain.company.vo.*;
@@ -30,7 +27,7 @@ import java.util.List;
  * ---------------------------
  * 部门 (DepartmentServiceImpl)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:03:44
  * 版本：  v1.0
  * ---------------------------

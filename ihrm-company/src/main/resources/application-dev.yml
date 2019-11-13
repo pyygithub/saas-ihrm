@@ -57,7 +57,7 @@ pagehelper:
 
 #mybatis配置
 mybatis:
-  type-aliases-package: com.pyy.ihrm.company.po
+  type-aliases-package: com.pyy.ihrm.company.model
   mapper-locations: 'classpath:mappers/*.xml'
   configuration:
     map-underscore-to-camel-case: true

@@ -1,7 +1,6 @@
 package com.pyy.ihrm.company.service;
 
 
-import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.domain.company.vo.CompanyDeptListVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentQueryConditionVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentSaveOrUpdateVO;
@@ -13,7 +12,7 @@ import java.util.List;
  * ---------------------------
  * 部门 (DepartmentService)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:03:44
  * 版本：  v1.0
  * ---------------------------

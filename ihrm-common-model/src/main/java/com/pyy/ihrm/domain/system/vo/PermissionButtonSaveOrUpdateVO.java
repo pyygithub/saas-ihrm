@@ -8,7 +8,7 @@ import lombok.Data;
  * ---------------------------
  * 按钮权限 (PermissionButton)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
@@ -17,10 +17,6 @@ import lombok.Data;
 @ApiModel(value = "PermissionButtonSaveOrUpdateVO",description = "按钮权限保存和修改VO类")
 public class PermissionButtonSaveOrUpdateVO {
 
-	@ApiModelProperty("ID")
-	private String id;
-	@ApiModelProperty("权限ID")
-	private String permissionId;
 	@ApiModelProperty("图标")
 	private String icon;
 

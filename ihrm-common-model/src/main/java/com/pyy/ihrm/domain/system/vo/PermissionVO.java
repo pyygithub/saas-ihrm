@@ -8,7 +8,7 @@ import lombok.Data;
  * ---------------------------
  * 权限 (Permission)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
@@ -19,16 +19,28 @@ public class PermissionVO {
 
 	@ApiModelProperty("ID")
     private String id;
+    @ApiModelProperty("父节点id")
+    private String parentId;
+    @ApiModelProperty("企业ID")
+    private String companyId;
 	@ApiModelProperty("权限名称")
     private String name;
 	@ApiModelProperty("权限标识")
     private String code;
-	@ApiModelProperty("权限类型: 1为菜单 2为功能 3为API")
+	@ApiModelProperty("权限类型: 1 菜单 2 按钮 3 API")
     private String type;
 	@ApiModelProperty("权限描述")
     private String description;
 	@ApiModelProperty("可见状态: 0 不可见 1 可见")
     private String enVisible;
+
+    @ApiModelProperty("菜单")
+    private PermissionMenuVO menu;
+    @ApiModelProperty("按钮")
+    private PermissionButtonVO button;
+    @ApiModelProperty("API")
+    private PermissionApiVO api;
+
 	@ApiModelProperty("创建人ID")
     private String createId;
 	@ApiModelProperty("创建人名称")

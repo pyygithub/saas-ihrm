@@ -8,7 +8,7 @@ import lombok.Data;
  * ---------------------------
  * 用户 (User)         
  * ---------------------------
- * 作者：  
+ * 作者：  pyy
  * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
@@ -19,6 +19,8 @@ public class UserVO {
 
 	@ApiModelProperty("ID")
     private String id;
+    @ApiModelProperty("企业ID")
+    private String companyId;
 	@ApiModelProperty("工号")
     private String workNumber;
 	@ApiModelProperty("部门ID")
