@@ -6,6 +6,7 @@ import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.company.service.DepartmentService;
 import com.pyy.ihrm.company.utils.UserUtil;
+import com.pyy.ihrm.domain.company.vo.CompanyDeptListVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentQueryConditionVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentSaveOrUpdateVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentVO;
@@ -110,31 +111,25 @@ public class DepartmentController {
      * @param queryConditionVO
      * @return
      */
-    @ApiOperation(value = "部门模糊查询", notes = "部门不带分页模糊查询")
+    @ApiOperation(value = "部门模糊查询", notes = "查询所有部门列表")
     @GetMapping("/departments")
-    public Result<List<DepartmentVO>> listByParams(DepartmentQueryConditionVO queryConditionVO) {
-        List<DepartmentVO> queryResult = departmentService.listByParams(queryConditionVO);
+    public Result<List<DepartmentVO>> findByParams(DepartmentQueryConditionVO queryConditionVO) {
+        List<DepartmentVO> queryResult = departmentService.findByParams(queryConditionVO);
         return Result.SUCCESS(queryResult);
     }
 
     /**
-     * 部门分页模糊查询
+     * 某企业下部门模糊查询
+     * @param companyId
      * @param queryConditionVO
-     * @param page
-     * @param size
      * @return
      */
-    @ApiOperation(value = "部门分页查询", notes = "部门分页模糊查询")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", required = true, dataType = "Integer", paramType = "query"),
-            @ApiImplicitParam(name = "size", value = "分页尺寸", required = true, dataType = "Integer", paramType = "query")
-    })
-    @GetMapping("/departments/page")
-    public Result<QueryResult<DepartmentVO>> listByPageAndParams(DepartmentQueryConditionVO queryConditionVO,
-                                                                 @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                                 @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        QueryResult<DepartmentVO> queryResult = departmentService.listByPageAndParams(queryConditionVO, page, size);
-        return Result.SUCCESS(queryResult);
+    @ApiOperation(value = "某企业下部门模糊查询", notes = "根据企业ID查询部门列表")
+    @ApiImplicitParam(name = "companyId", value = "企业ID", required = true, dataType = "String", paramType = "path")
+    @GetMapping("/{companyId}/departments")
+    public Result<CompanyDeptListVO> findByCompanyIdAndParams(@PathVariable("companyId") String companyId, DepartmentQueryConditionVO queryConditionVO) {
+        CompanyDeptListVO companyDeptListVO = departmentService.findByCompanyIdAndParams(companyId, queryConditionVO);
+        return Result.SUCCESS(companyDeptListVO);
     }
 	
 }
