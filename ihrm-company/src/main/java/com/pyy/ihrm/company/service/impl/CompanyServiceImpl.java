@@ -59,8 +59,8 @@ public class CompanyServiceImpl implements CompanyService {
         companyModel.setId(SnowflakeId.getId() + "");
         companyModel.setAuditState(CommonConstants.UN_AUDITED);// 未审核
         companyModel.setState(CommonConstants.ACTIVATED); // 已激活
-        companyModel.setCreateId(companySaveOrUpdateVO.getUserId());
-        companyModel.setCreateName(companySaveOrUpdateVO.getUsername());
+        companyModel.setCreateId(companySaveOrUpdateVO.getOperaterId());
+        companyModel.setCreateName(companySaveOrUpdateVO.getOperaterName());
         companyModel.setCreateTime(new Date());
         companyModel.setIsDeleted(CommonConstants.UN_DELETED);
 
@@ -83,8 +83,8 @@ public class CompanyServiceImpl implements CompanyService {
         // 修改
         BeanUtils.copyProperties(companySaveOrUpdateVO, companyModel);
         companyModel.setUpdateTime(new Date());
-        companyModel.setUpdateId(companySaveOrUpdateVO.getUserId());
-        companyModel.setUpdateName(companySaveOrUpdateVO.getUsername());
+        companyModel.setUpdateId(companySaveOrUpdateVO.getOperaterId());
+        companyModel.setUpdateName(companySaveOrUpdateVO.getOperaterName());
 
         companyMapper.updateByPrimaryKey(companyModel);
         log.info("### 企业信息修改成功 ###");

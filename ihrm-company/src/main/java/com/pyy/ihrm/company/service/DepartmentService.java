@@ -2,6 +2,7 @@ package com.pyy.ihrm.company.service;
 
 
 import com.pyy.ihrm.common.response.QueryResult;
+import com.pyy.ihrm.domain.company.vo.CompanyDeptListVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentQueryConditionVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentSaveOrUpdateVO;
 import com.pyy.ihrm.domain.company.vo.DepartmentVO;
@@ -47,19 +48,17 @@ public interface DepartmentService {
 	public DepartmentVO findById(String id);
 
     /**
-     * 部门模糊查询
+     * 根据条件模糊查询所有部门信息
      * @param queryConditionVO
      * @return
      */
-    public List<DepartmentVO> listByParams(DepartmentQueryConditionVO queryConditionVO);
-
+    public List<DepartmentVO> findByParams(DepartmentQueryConditionVO queryConditionVO);
 
     /**
-     * 部门分页模糊查询
+     * 根据条件模糊查询某企业下部门信息
+     * @param companyId
      * @param queryConditionVO
-     * @param page
-     * @param size
      * @return
      */
-    public QueryResult<DepartmentVO> listByPageAndParams(DepartmentQueryConditionVO queryConditionVO, Integer page, Integer size);
+    public CompanyDeptListVO findByCompanyIdAndParams(String companyId, DepartmentQueryConditionVO queryConditionVO);
 }

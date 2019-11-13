@@ -10,11 +10,9 @@ import com.pyy.ihrm.company.constants.CommonConstants;
 import com.pyy.ihrm.company.exception.CustomException;
 import com.pyy.ihrm.company.mapper.DepartmentMapper;
 import com.pyy.ihrm.company.po.Department;
+import com.pyy.ihrm.company.service.CompanyService;
 import com.pyy.ihrm.company.service.DepartmentService;
-import com.pyy.ihrm.company.utils.UserUtil;
-import com.pyy.ihrm.domain.company.vo.DepartmentQueryConditionVO;
-import com.pyy.ihrm.domain.company.vo.DepartmentSaveOrUpdateVO;
-import com.pyy.ihrm.domain.company.vo.DepartmentVO;
+import com.pyy.ihrm.domain.company.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +43,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Autowired
 	private DepartmentMapper departmentMapper;
 
+	@Autowired
+    private CompanyService companyService;
+
     /**
      * 部门保存
      * @param departmentSaveOrUpdateVO
@@ -55,8 +56,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department departmentModel = new Department();
         BeanUtils.copyProperties(departmentSaveOrUpdateVO, departmentModel);
         departmentModel.setId(SnowflakeId.getId() + "");
-        departmentModel.setCreateId(departmentSaveOrUpdateVO.getUserId());
-        departmentModel.setCreateName(departmentSaveOrUpdateVO.getUsername());
+        departmentModel.setCreateId(departmentSaveOrUpdateVO.getOperaterId());
+        departmentModel.setCreateName(departmentSaveOrUpdateVO.getOperaterName());
         departmentModel.setCreateTime(new Timestamp(System.currentTimeMillis()));
         departmentModel.setIsDeleted(CommonConstants.UN_DELETED);
 
@@ -71,17 +72,19 @@ public class DepartmentServiceImpl implements DepartmentService {
      */
     @Override
     public void update(String id, DepartmentSaveOrUpdateVO departmentSaveOrUpdateVO) {
+        // 1.根据ID查询部门
         Department departmentModel = departmentMapper.selectByPrimaryKey(id);
         if (departmentModel == null) {
             throw new CustomException(ResultCode.RESULT_DATA_NONE, "部门");
         }
 
-        // 修改
+        // 2.设置部门属性
         BeanUtils.copyProperties(departmentSaveOrUpdateVO, departmentModel);
-        departmentModel.setUpdateId(departmentSaveOrUpdateVO.getUserId());
-        departmentModel.setUpdateName(departmentSaveOrUpdateVO.getUsername());
+        departmentModel.setUpdateId(departmentSaveOrUpdateVO.getOperaterId());
+        departmentModel.setUpdateName(departmentSaveOrUpdateVO.getOperaterName());
         departmentModel.setUpdateTime(new Date());
 
+        // 3.更新部门
         departmentMapper.updateByPrimaryKey(departmentModel);
         log.info("### 部门修改成功 ###");
     }
@@ -125,18 +128,18 @@ public class DepartmentServiceImpl implements DepartmentService {
         log.info("### 部门Model转换VO成功， departmentVO={}###", departmentVO);
         return departmentVO;
 	}
-
-  /**
-     * 部门模糊查询
+    /**
+     * 根据条件模糊查询所有部门信息
      * @param queryConditionVO
      * @return
      */
     @Override
-    public List<DepartmentVO> listByParams(DepartmentQueryConditionVO queryConditionVO) {
+    public List<DepartmentVO> findByParams(DepartmentQueryConditionVO queryConditionVO){
+        // 1.根据条件查询部门列表
         List<Department> departmentList = departmentMapper.selectByPageAndParam(queryConditionVO);
         log.info("### 部门Model模糊查询完毕，总条数：{}条###", departmentList.size());
 
-        // 部门Model转换VO数据完毕
+        // 1.1 部门Model转换VO数据
         List<DepartmentVO> departmentVOList = new ArrayList<>();
         departmentList.forEach(department -> {
             DepartmentVO departmentVO = new DepartmentVO();
@@ -148,24 +151,22 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentVOList;
     }
 
+
     /**
-     * 部门分页模糊查询
+     * 根据条件模糊查询某企业下部门信息
+     * @param companyId
      * @param queryConditionVO
-     * @param page
-     * @param size
      * @return
      */
-	@Override
-    public QueryResult<DepartmentVO> listByPageAndParams(DepartmentQueryConditionVO queryConditionVO, Integer page, Integer size) {
-        // 分页查询
-        PageHelper.startPage(page, size);
+    @Override
+    public CompanyDeptListVO findByCompanyIdAndParams(String companyId, DepartmentQueryConditionVO queryConditionVO){
+        // 1.根据条件查询部门列表
         List<Department> departmentList = departmentMapper.selectByPageAndParam(queryConditionVO);
-        // 获取分页后数据
-        PageInfo<Department> pageInfo = new PageInfo<>(departmentList);
-        log.info("### 部门分页查询完毕,总条数：{} ###", pageInfo.getTotal());
+        log.info("### 部门Model模糊查询完毕，总条数：{}条###", departmentList.size());
 
+        // 1.1 部
+        // 门Model转换VO数据
         List<DepartmentVO> departmentVOList = new ArrayList<>();
-        // 补全数据
         departmentList.forEach(department -> {
             DepartmentVO departmentVO = new DepartmentVO();
             BeanUtils.copyProperties(department, departmentVO);
@@ -173,11 +174,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         });
         log.info("### 部门Model转换VO数据完毕###");
 
-        // 封装需要返回的实体数据
-        QueryResult queryResult = new QueryResult();
-        queryResult.setTotal(pageInfo.getTotal());
-        queryResult.setList(departmentVOList);
+        // 2.根据企业ID查询企业信息
+        CompanyVO companyVO = companyService.findById(companyId);
 
-        return queryResult;
+        // 3.构造结果
+        CompanyDeptListVO companyDeptListVO = new CompanyDeptListVO(companyVO, departmentVOList);
+
+        return companyDeptListVO;
     }
+
 }

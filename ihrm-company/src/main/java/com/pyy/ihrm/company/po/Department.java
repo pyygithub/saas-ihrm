@@ -22,7 +22,7 @@ public class Department {
 	@Id
 	private String id;
 	/** 父级ID */
-	private String parentid;
+	private String parentId;
 	/** 企业ID */
 	private String companyId;
 	/** 部门编码 */

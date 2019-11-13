@@ -1,4 +1,4 @@
-package com.pyy.ihrm.domain.company.vo;
+package com.pyy.ihrm.domain.system.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,33 +6,25 @@ import lombok.Data;
 
 /**
  * ---------------------------
- * 部门 (Department)         
+ * 角色 (Role)         
  * ---------------------------
  * 作者：  
- * 时间：  2019-11-13 10:03:44
+ * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
  */
 @Data
-@ApiModel(value = "DepartmentVO",description = "部门类")
-public class DepartmentVO {
+@ApiModel(value = "RoleVO",description = "角色类")
+public class RoleVO {
 
 	@ApiModelProperty("ID")
     private String id;
-	@ApiModelProperty("父级ID")
-    private String parentId;
-	@ApiModelProperty("企业ID")
+	@ApiModelProperty("企业id")
     private String companyId;
-	@ApiModelProperty("部门编码")
-    private String code;
-	@ApiModelProperty("部门名称")
+	@ApiModelProperty("说明")
+    private String description;
+	@ApiModelProperty("角色名")
     private String name;
-	@ApiModelProperty("负责人ID")
-    private String managerId;
-	@ApiModelProperty("负责人名称")
-    private String managerName;
-	@ApiModelProperty("介绍")
-    private String introduce;
 	@ApiModelProperty("创建人ID")
     private String createId;
 	@ApiModelProperty("创建人名称")

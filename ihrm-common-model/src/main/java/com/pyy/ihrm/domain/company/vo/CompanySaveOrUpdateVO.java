@@ -54,7 +54,7 @@ public class CompanySaveOrUpdateVO {
 	@ApiModelProperty("企业登录账号ID")
 	private String managerId;
 	@ApiModelProperty("操作人ID")
-	private String userId;
+	private String operaterId;
 	@ApiModelProperty("操作人名称")
-	private String username;
+	private String operaterName;
 }

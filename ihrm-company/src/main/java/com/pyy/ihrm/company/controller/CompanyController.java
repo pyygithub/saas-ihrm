@@ -47,8 +47,8 @@ public class CompanyController {
         String userId = "admin";
         String username = "admin";
 
-        record.setUserId(userId);
-        record.setUsername(username);
+        record.setOperaterId(userId);
+        record.setOperaterName(username);
         companyService.save(record);
         return Result.SUCCESS();
     }
@@ -70,8 +70,8 @@ public class CompanyController {
         String userId = "admin";
         String username = "admin";
 
-        record.setUserId(userId);
-        record.setUsername(username);
+        record.setOperaterId(userId);
+        record.setOperaterName(username);
         companyService.update(id, record);
         return Result.SUCCESS();
     }

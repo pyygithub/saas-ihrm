@@ -48,8 +48,8 @@ public class DepartmentController {
         // 后面集成JWT后完善
         String userId = "admin";
         String username = "admin";
-        record.setUserId(userId);
-        record.setUsername(username);
+        record.setOperaterId(userId);
+        record.setOperaterName(username);
         departmentService.save(record);
         return Result.SUCCESS();
     }
@@ -70,8 +70,8 @@ public class DepartmentController {
         // 后面集成JWT后完善
         String userId = "admin";
         String username = "admin";
-        record.setUserId(userId);
-        record.setUsername(username);
+        record.setOperaterId(userId);
+        record.setOperaterName(username);
         departmentService.update(id, record);
         return Result.SUCCESS();
     }

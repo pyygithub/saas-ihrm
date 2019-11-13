@@ -20,7 +20,7 @@ public class DepartmentSaveOrUpdateVO {
 	@ApiModelProperty("ID")
 	private String id;
 	@ApiModelProperty("父级ID")
-	private String parentid;
+	private String parentId;
 	@ApiModelProperty("企业ID")
 	private String companyId;
 	@ApiModelProperty("部门编码")
@@ -34,8 +34,7 @@ public class DepartmentSaveOrUpdateVO {
 	@ApiModelProperty("介绍")
 	private String introduce;
 	@ApiModelProperty("操作人ID")
-	private String userId;
+	private String operaterId;
 	@ApiModelProperty("操作人名称")
-	private String username;
-
+	private String operaterName;
 }

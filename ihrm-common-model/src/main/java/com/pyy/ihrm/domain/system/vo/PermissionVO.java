@@ -1,4 +1,4 @@
-package com.pyy.ihrm.domain.company.vo;
+package com.pyy.ihrm.domain.system.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,33 +6,29 @@ import lombok.Data;
 
 /**
  * ---------------------------
- * 部门 (Department)         
+ * 权限 (Permission)         
  * ---------------------------
  * 作者：  
- * 时间：  2019-11-13 10:03:44
+ * 时间：  2019-11-13 10:35:07
  * 版本：  v1.0
  * ---------------------------
  */
 @Data
-@ApiModel(value = "DepartmentVO",description = "部门类")
-public class DepartmentVO {
+@ApiModel(value = "PermissionVO",description = "权限类")
+public class PermissionVO {
 
 	@ApiModelProperty("ID")
     private String id;
-	@ApiModelProperty("父级ID")
-    private String parentId;
-	@ApiModelProperty("企业ID")
-    private String companyId;
-	@ApiModelProperty("部门编码")
-    private String code;
-	@ApiModelProperty("部门名称")
+	@ApiModelProperty("权限名称")
     private String name;
-	@ApiModelProperty("负责人ID")
-    private String managerId;
-	@ApiModelProperty("负责人名称")
-    private String managerName;
-	@ApiModelProperty("介绍")
-    private String introduce;
+	@ApiModelProperty("权限标识")
+    private String code;
+	@ApiModelProperty("权限类型: 1为菜单 2为功能 3为API")
+    private String type;
+	@ApiModelProperty("权限描述")
+    private String description;
+	@ApiModelProperty("可见状态: 0 不可见 1 可见")
+    private String enVisible;
 	@ApiModelProperty("创建人ID")
     private String createId;
 	@ApiModelProperty("创建人名称")
