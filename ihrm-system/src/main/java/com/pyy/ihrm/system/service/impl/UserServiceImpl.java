@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         log.info("### 用户修改成功 ###");
     }
 
-   /**
+    /**
     * 用户删除
     * @param id
     */
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
         log.info("### 用户逻辑删除成功 ###");
 	}
 
-   /**
+    /**
     * 根据用户ID查询
     * @param id
     */

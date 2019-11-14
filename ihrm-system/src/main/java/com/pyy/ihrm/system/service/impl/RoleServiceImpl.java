@@ -102,7 +102,7 @@ public class RoleServiceImpl implements RoleService {
         log.info("### 角色修改成功 ###");
     }
 
-   /**
+    /**
     * 角色删除
     * @param id
     */
@@ -124,7 +124,7 @@ public class RoleServiceImpl implements RoleService {
         log.info("### 角色逻辑删除成功 ###");
 	}
 
-   /**
+    /**
     * 根据角色ID查询
     * @param id
     */
@@ -155,7 +155,7 @@ public class RoleServiceImpl implements RoleService {
         return rolePermissionVO;
 	}
 
-  /**
+    /**
      * 角色模糊查询
      * @param queryConditionVO
      * @return
