@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * ========================
- * JWT验证忽略注解
+ * JWT验证注解
  * Created with IntelliJ IDEA.
  * User：pyy
  * Date：2019/7/18 9:50
@@ -14,5 +14,6 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface JwtIgnore {
+public @interface RequiresPermissions {
+    String value();
 }

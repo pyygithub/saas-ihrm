@@ -43,8 +43,8 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
             handlerMethod = (HandlerMethod) handler;
         }
         // 忽略带JwtIgnore注解的请求, 不做后续token认证校验
-        JwtIgnore jwtIgnore = handlerMethod.getMethodAnnotation(JwtIgnore.class);
-        if (jwtIgnore != null) {
+        TokenIgnore tokenIgnore = handlerMethod.getMethodAnnotation(TokenIgnore.class);
+        if (tokenIgnore != null) {
             return true;
         }
         // 请求中获取key为Authorization的头信息
@@ -60,10 +60,10 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 // 通过claims获取到当前用户的可访问API权限字符串
                 String apis = (String) claims.get("apis"); //api-user-delete,api-user-update
                 // 获取@Secured注解
-                JwtSecured jwtSecured = handlerMethod.getMethodAnnotation(JwtSecured.class);
-                if (jwtSecured != null && jwtSecured.value() != null) {
+                RequiresPermissions requiresPermissions = handlerMethod.getMethodAnnotation(RequiresPermissions.class);
+                if (requiresPermissions != null && requiresPermissions.value() != null) {
                     // 获取当前请求接口授权地址
-                    String apiCode = jwtSecured.value();
+                    String apiCode = requiresPermissions.value();
                     // 判断当前用户是否具有相应的请求权限
                     if (apis.contains(apiCode)) {
                         request.setAttribute(USER_CLAIMS, claims);
