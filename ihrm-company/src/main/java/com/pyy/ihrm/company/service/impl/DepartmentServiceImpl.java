@@ -3,7 +3,7 @@ package com.pyy.ihrm.company.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
-import com.pyy.ihrm.company.constants.CommonConstants;
+import com.pyy.ihrm.company.constants.CompanyConstants;
 import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.company.mapper.DepartmentMapper;
 import com.pyy.ihrm.company.model.Department;
@@ -56,7 +56,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentModel.setCreateId(departmentSaveOrUpdateVO.getOperaterId());
         departmentModel.setCreateName(departmentSaveOrUpdateVO.getOperaterName());
         departmentModel.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        departmentModel.setIsDeleted(CommonConstants.UN_DELETED);
+        departmentModel.setIsDeleted(CompanyConstants.UN_DELETED);
 
         departmentMapper.insert(departmentModel);
         log.info("### 部门保存成功 ###");
@@ -102,7 +102,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentModel.setUpdateId(userId);
         departmentModel.setUpdateName(username);
         departmentModel.setUpdateTime(new Date());
-        departmentModel.setIsDeleted(CommonConstants.DELETED);
+        departmentModel.setIsDeleted(CompanyConstants.DELETED);
 
         departmentMapper.updateByPrimaryKeySelective(departmentModel);
         log.info("### 部门逻辑删除成功 ###");

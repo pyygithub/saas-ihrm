@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
-import com.pyy.ihrm.company.constants.CommonConstants;
+import com.pyy.ihrm.company.constants.CompanyConstants;
 import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.company.mapper.CompanyMapper;
 import com.pyy.ihrm.company.model.Company;
@@ -56,12 +56,12 @@ public class CompanyServiceImpl implements CompanyService {
         Company companyModel = new Company();
         BeanUtils.copyProperties(companySaveOrUpdateVO, companyModel);
         companyModel.setId(SnowflakeId.getId() + "");
-        companyModel.setAuditState(CommonConstants.UN_AUDITED);// 未审核
-        companyModel.setState(CommonConstants.ACTIVATED); // 已激活
+        companyModel.setAuditState(CompanyConstants.UN_AUDITED);// 未审核
+        companyModel.setState(CompanyConstants.ACTIVATED); // 已激活
         companyModel.setCreateId(companySaveOrUpdateVO.getOperaterId());
         companyModel.setCreateName(companySaveOrUpdateVO.getOperaterName());
         companyModel.setCreateTime(new Date());
-        companyModel.setIsDeleted(CommonConstants.UN_DELETED);
+        companyModel.setIsDeleted(CompanyConstants.UN_DELETED);
 
         companyMapper.insert(companyModel);
         log.info("### 企业信息保存成功 ###");
@@ -107,7 +107,7 @@ public class CompanyServiceImpl implements CompanyService {
         companyModel.setUpdateId(userId);
         companyModel.setUpdateName(username);
         companyModel.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        companyModel.setIsDeleted(CommonConstants.DELETED);
+        companyModel.setIsDeleted(CompanyConstants.DELETED);
 
         companyMapper.updateByPrimaryKeySelective(companyModel);
         log.info("### 企业信息逻辑删除成功 ###");

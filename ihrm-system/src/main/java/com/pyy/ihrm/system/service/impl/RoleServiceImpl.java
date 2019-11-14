@@ -10,7 +10,7 @@ import com.pyy.ihrm.domain.system.vo.RolePermissionsVO;
 import com.pyy.ihrm.domain.system.vo.RoleQueryConditionVO;
 import com.pyy.ihrm.domain.system.vo.RoleSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.RoleVO;
-import com.pyy.ihrm.system.constants.CommonConstants;
+import com.pyy.ihrm.system.constants.SystemConstants;
 import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.system.mapper.PermissionApiMapper;
 import com.pyy.ihrm.system.mapper.PermissionMapper;
@@ -74,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
         roleModel.setCreateId(roleSaveOrUpdateVO.getOperaterId());
         roleModel.setCreateName(roleSaveOrUpdateVO.getOperaterName());
         roleModel.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        roleModel.setIsDeleted(CommonConstants.UN_DELETED);
+        roleModel.setIsDeleted(SystemConstants.UN_DELETED);
 
         roleMapper.insert(roleModel);
         log.info("### 角色保存成功 ###");
@@ -118,7 +118,7 @@ public class RoleServiceImpl implements RoleService {
         roleModel.setUpdateId(userId);
         roleModel.setUpdateName(username);
         roleModel.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        roleModel.setIsDeleted(CommonConstants.UN_DELETED);
+        roleModel.setIsDeleted(SystemConstants.UN_DELETED);
 
         roleMapper.updateByPrimaryKeySelective(roleModel);
         log.info("### 角色逻辑删除成功 ###");
@@ -237,9 +237,9 @@ public class RoleServiceImpl implements RoleService {
                 // 3.1根据perentId和type查询当前菜单或按钮对应的API权限
                 Example permissionExample = new Example(Permission.class);
                 permissionExample.createCriteria()
-                        .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                        .andEqualTo("isDeleted", SystemConstants.UN_DELETED)
                         .andEqualTo("parentId", permissionId)
-                        .andEqualTo("type", CommonConstants.API);
+                        .andEqualTo("type", SystemConstants.API);
                 List<Permission> apiPermissionList = permissionMapper.selectByExample(permissionExample);
                 List<String> apiPermissionIds = apiPermissionList.stream().map(Permission::getId).collect(Collectors.toList());
                 permissionIds.addAll(apiPermissionIds);// 自动赋予API权限

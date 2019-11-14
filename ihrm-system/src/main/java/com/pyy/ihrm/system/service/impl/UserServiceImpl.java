@@ -5,15 +5,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.common.jwt.JwtConfig;
-import com.pyy.ihrm.common.jwt.JwtInterceptor;
 import com.pyy.ihrm.common.jwt.JwtTokenUtil;
 import com.pyy.ihrm.common.response.QueryResult;
-import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.common.utils.SpringSecurityUtil;
 import com.pyy.ihrm.domain.system.vo.*;
-import com.pyy.ihrm.system.constants.CommonConstants;
+import com.pyy.ihrm.system.constants.SystemConstants;
 import com.pyy.ihrm.system.mapper.PermissionMapper;
 import com.pyy.ihrm.system.mapper.RolePermissionMapper;
 import com.pyy.ihrm.system.mapper.UserMapper;
@@ -23,7 +21,6 @@ import com.pyy.ihrm.system.model.RolePermission;
 import com.pyy.ihrm.system.model.User;
 import com.pyy.ihrm.system.model.UserRole;
 import com.pyy.ihrm.system.service.UserService;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +29,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -84,12 +78,12 @@ public class UserServiceImpl implements UserService {
         User userModel = new User();
         BeanUtils.copyProperties(userSaveOrUpdateVO, userModel);
         userModel.setId(SnowflakeId.getId() + "");
-        userModel.setInServiceStatus(CommonConstants.IN_SERVICE);// 在职
-        userModel.setEnableState(CommonConstants.ENABLE);// 启用
+        userModel.setInServiceStatus(SystemConstants.IN_SERVICE);// 在职
+        userModel.setEnableState(SystemConstants.ENABLE);// 启用
         userModel.setCreateId(userSaveOrUpdateVO.getOperaterId());
         userModel.setCreateName(userSaveOrUpdateVO.getOperaterName());
         userModel.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        userModel.setIsDeleted(CommonConstants.UN_DELETED);
+        userModel.setIsDeleted(SystemConstants.UN_DELETED);
 
         // 密码加密
         String encoderPassword = SpringSecurityUtil.encoderPassword(userModel.getPassword());
@@ -140,7 +134,7 @@ public class UserServiceImpl implements UserService {
         userModel.setUpdateId(userId);
         userModel.setUpdateName(username);
         userModel.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        userModel.setIsDeleted(CommonConstants.DELETED);
+        userModel.setIsDeleted(SystemConstants.DELETED);
 
         // 3.更新用户（逻辑删除）
         userMapper.updateByPrimaryKeySelective(userModel);
@@ -273,7 +267,7 @@ public class UserServiceImpl implements UserService {
     public String login(String username, String password) {
         Example userExample = new Example(User.class);
         userExample.createCriteria()
-                .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                .andEqualTo("isDeleted", SystemConstants.UN_DELETED)
                 .andEqualTo("username", username);
         User user = userMapper.selectOneByExample(userExample);
         // 登录失败
@@ -287,7 +281,6 @@ public class UserServiceImpl implements UserService {
             List<String> roleIds = this.getRoleIdsByUserId(user.getId());
             // 获取到所有可以访问的API权限
             String apis = this.getApiCodesByRoleIds(roleIds);
-
             Map<String, Object> extAttribute = new HashMap<>();
             extAttribute.put("apis", apis);
             extAttribute.put("companyId", user.getCompanyId());
@@ -308,15 +301,23 @@ public class UserServiceImpl implements UserService {
         // 根据用户id查询用户信息
         User user = userMapper.selectByPrimaryKey(userId);
         // 根据不同用户级别获取用户权限
+        String level = user.getLevel();
 
+        Map<String, Object> permissions = null;
+        // 平台管理员：拥有所有权限
+        if (SystemConstants.SAAS_ADMIN.equals(level)) {
+            permissions = this.getAllPermissions();
+        }
+        // 企业管理员：拥有企业下所有权限
+        else if (SystemConstants.COMPANY_ADMIN.equals(level)) {
+            permissions = this.getAllPermissionsByCompanyId(user.getCompanyId());
+        }
+        //  企业员工：拥有对应角色权限
+        else if (SystemConstants.COMPANY_USER.equals(level)) {
+            permissions = this.getRolePermissionsByUserId(userId);
+        }
 
-
-        // 根据用户id查询关联权限集合
-        Map<String, Object> permissions = this.getPermissionsByUserId(userId);
-
-
-
-
+        // 封装个人信息
         ProfileVO profileVO = new ProfileVO();
         profileVO.setUsername(user.getUsername());
         profileVO.setMobile(user.getMobile());
@@ -327,10 +328,31 @@ public class UserServiceImpl implements UserService {
         return profileVO;
     }
 
-    // 根据用户id查询关联权限集合
-    private Map<String, Object> getPermissionsByUserId(String userId) {
-        Map<String, Object> permissions = new HashMap<>();
+    // 根据企业ID查询某企业下所有权限编码
+    private Map<String, Object> getAllPermissionsByCompanyId(String companyId) {
+        Example permissionExample = new Example(Permission.class);
+        permissionExample.createCriteria()
+                .andEqualTo("isDeleted", SystemConstants.UN_DELETED)
+                .andEqualTo("enVisible", SystemConstants.EN_VISIBLE)
+                .andEqualTo("companyId", companyId);
+        List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
 
+        // 按权限类型对权限编码分类
+        return classifyPermissionByType(permissionList);
+    }
+
+    // 查询所有权限编码
+    private Map<String, Object> getAllPermissions() {
+        Example permissionExample = new Example(Permission.class);
+        permissionExample.createCriteria().andEqualTo("isDeleted", SystemConstants.UN_DELETED);
+        List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
+
+        // 按权限类型对权限编码分类
+        return classifyPermissionByType(permissionList);
+    }
+
+    // 根据用户id查询关联角色对应权限编码
+    private Map<String, Object> getRolePermissionsByUserId(String userId) {
         // 根据用户ID查询关联角色ID
         List<String> roleIds = this.getRoleIdsByUserId(userId);
 
@@ -348,29 +370,39 @@ public class UserServiceImpl implements UserService {
                 // 查询权限
                 Example permissionExample = new Example(Permission.class);
                 permissionExample.createCriteria()
-                        .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                        .andEqualTo("isDeleted", SystemConstants.UN_DELETED)
                         .andIn("id", removedDuplicatePermissionIds);
                 List<Permission> apiPermissionList = permissionMapper.selectByExample(permissionExample);
-                // 按类型分类
-                List<String> menus = new ArrayList<>(20);
-                List<String> buttons = new ArrayList<>(30);
-                List<String> apis = new ArrayList<>(20);
-                for (Permission permission : apiPermissionList) {
-                    String code = permission.getCode();
-                    String type = permission.getType();
-                    if (CommonConstants.MENU.equalsIgnoreCase(type)) {
-                        menus.add(code);
-                    } else if (CommonConstants.BUTTON.equalsIgnoreCase(type)) {
-                        buttons.add(code);
-                    } else if (CommonConstants.API.equalsIgnoreCase(type)) {
-                        apis.add(code);
-                    }
-                }
-                permissions.put("menus", menus);
-                permissions.put("buttons", buttons);
-                permissions.put("apis", apis);
+
+                // 按权限类型对权限编码分类
+                return classifyPermissionByType(apiPermissionList);
             }
         }
+        return null;
+    }
+
+    // 按权限类型对权限编码分类
+    private Map<String, Object> classifyPermissionByType(List<Permission> permissionList) {
+        Map<String, Object> permissions = new HashMap<>();
+        // 按类型分类
+        List<String> menus = new ArrayList<>(20);
+        List<String> buttons = new ArrayList<>(30);
+        List<String> apis = new ArrayList<>(20);
+        for (Permission permission : permissionList) {
+            String code = permission.getCode();
+            String type = permission.getType();
+            if (SystemConstants.MENU.equalsIgnoreCase(type)) {
+                menus.add(code);
+            } else if (SystemConstants.BUTTON.equalsIgnoreCase(type)) {
+                buttons.add(code);
+            } else if (SystemConstants.API.equalsIgnoreCase(type)) {
+                apis.add(code);
+            }
+        }
+        permissions.put("menus", menus);
+        permissions.put("buttons", buttons);
+        permissions.put("apis", apis);
+        log.info("### 权限编码按类型分类完毕 permissions={} ###", permissions);
         return permissions;
     }
 
@@ -397,9 +429,9 @@ public class UserServiceImpl implements UserService {
                     // 查询所有API权限
                     Example permissionExample = new Example(Permission.class);
                     permissionExample.createCriteria()
-                            .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                            .andEqualTo("isDeleted", SystemConstants.UN_DELETED)
                             .andEqualTo("id", permissionId)
-                            .andEqualTo("type", CommonConstants.API);
+                            .andEqualTo("type", SystemConstants.API);
                     List<Permission> apiPermissionList = permissionMapper.selectByExample(permissionExample);
                     List<String> apiCodeList = apiPermissionList.stream().map(Permission::getCode).collect(Collectors.toList());
 

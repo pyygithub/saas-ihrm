@@ -9,7 +9,7 @@ package com.pyy.ihrm.company.constants;
  * Version: v1.0
  * ========================
  */
-public interface CommonConstants {
+public interface CompanyConstants {
 
     // 删除标记： 0 未删除 1 删除
     Integer DELETED = 1;

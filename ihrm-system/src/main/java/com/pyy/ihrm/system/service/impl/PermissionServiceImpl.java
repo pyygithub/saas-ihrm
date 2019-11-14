@@ -5,7 +5,7 @@ import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.domain.system.vo.*;
-import com.pyy.ihrm.system.constants.CommonConstants;
+import com.pyy.ihrm.system.constants.SystemConstants;
 import com.pyy.ihrm.system.mapper.PermissionApiMapper;
 import com.pyy.ihrm.system.mapper.PermissionButtonMapper;
 import com.pyy.ihrm.system.mapper.PermissionMapper;
@@ -68,14 +68,14 @@ public class PermissionServiceImpl implements PermissionService {
         permissionModel.setCreateId(permissionSaveOrUpdateVO.getOperaterId());
         permissionModel.setCreateName(permissionSaveOrUpdateVO.getOperaterName());
         permissionModel.setCreateTime(new Date());
-        permissionModel.setIsDeleted(CommonConstants.UN_DELETED);
+        permissionModel.setIsDeleted(SystemConstants.UN_DELETED);
         permissionMapper.insert(permissionModel);
         log.info("### 权限主表保存成功 ###");
 
         // 判断权限类型
         String type = permissionSaveOrUpdateVO.getType();
         // 菜单权限
-        if (CommonConstants.MENU.equals(type)) {
+        if (SystemConstants.MENU.equals(type)) {
             PermissionMenu menuModel = new PermissionMenu();
             PermissionMenuSaveOrUpdateVO menuSaveOrUpdateVO = permissionSaveOrUpdateVO.getMenuSaveOrUpdateVO();
             BeanUtils.copyProperties(menuSaveOrUpdateVO, menuModel);
@@ -85,7 +85,7 @@ public class PermissionServiceImpl implements PermissionService {
             log.info("### 菜单权限保存完毕 ###");
         }
         // 按钮权限
-        else if (CommonConstants.BUTTON.equals(type)) {
+        else if (SystemConstants.BUTTON.equals(type)) {
             PermissionButton buttonModel = new PermissionButton();
             PermissionButtonSaveOrUpdateVO buttonSaveOrUpdateVO = permissionSaveOrUpdateVO.getButtonSaveOrUpdateVO();
             BeanUtils.copyProperties(buttonSaveOrUpdateVO, buttonModel);
@@ -95,7 +95,7 @@ public class PermissionServiceImpl implements PermissionService {
             log.info("### 按钮权限保存完毕 ###");
         }
         // API权限
-        else if (CommonConstants.API.equals(type)) {
+        else if (SystemConstants.API.equals(type)) {
             PermissionApi apiModel = new PermissionApi();
             PermissionApiSaveOrUpdateVO apiSaveOrUpdateVO = permissionSaveOrUpdateVO.getApiSaveOrUpdateVO();
             BeanUtils.copyProperties(apiSaveOrUpdateVO, apiModel);
@@ -132,7 +132,7 @@ public class PermissionServiceImpl implements PermissionService {
         // 4.判断权限类型
         String type = permissionSaveOrUpdateVO.getType();
         // 4.1 菜单权限
-        if (CommonConstants.MENU.equals(type)) {
+        if (SystemConstants.MENU.equals(type)) {
             // 根据权限ID查询菜单权限
             Example menuExample = new Example(PermissionMenu.class);
             menuExample.createCriteria().andEqualTo("permissionId", id);
@@ -146,7 +146,7 @@ public class PermissionServiceImpl implements PermissionService {
             log.info("### 菜单权限修改完毕 ###");
         }
         // 4.2 按钮权限
-        else if (CommonConstants.BUTTON.equals(type)) {
+        else if (SystemConstants.BUTTON.equals(type)) {
             // 根据权限ID查询按钮权限
             Example buttonExample = new Example(PermissionButton.class);
             buttonExample.createCriteria().andEqualTo("permissionId", id);
@@ -160,7 +160,7 @@ public class PermissionServiceImpl implements PermissionService {
             log.info("### 按钮权限修改完毕 ###");
         }
         // 4.3API权限
-        else if (CommonConstants.API.equals(type)) {
+        else if (SystemConstants.API.equals(type)) {
             // 根据权限ID查询API权限
             Example apiExample = new Example(PermissionApi.class);
             apiExample.createCriteria().andEqualTo("permissionId", id);
@@ -192,7 +192,7 @@ public class PermissionServiceImpl implements PermissionService {
         permissionModel.setUpdateId(userId);
         permissionModel.setUpdateName(username);
         permissionModel.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        permissionModel.setIsDeleted(CommonConstants.UN_DELETED);
+        permissionModel.setIsDeleted(SystemConstants.UN_DELETED);
 
         // 3.逻辑删除
         permissionMapper.updateByPrimaryKeySelective(permissionModel);
@@ -201,21 +201,21 @@ public class PermissionServiceImpl implements PermissionService {
         // 4.判断权限类型
         String type = permissionModel.getType();
         // 4.1 菜单权限
-        if (CommonConstants.MENU.equals(type)) {
+        if (SystemConstants.MENU.equals(type)) {
             Example menuExample = new Example(PermissionMenu.class);
             menuExample.createCriteria().andEqualTo("permissionId", id);
             permissionMenuMapper.deleteByExample(menuExample);
             log.info("### 菜单权限删除完毕 ###");
         }
         // 4.2 按钮权限
-        else if (CommonConstants.BUTTON.equals(type)) {
+        else if (SystemConstants.BUTTON.equals(type)) {
             Example buttonExample = new Example(PermissionButton.class);
             buttonExample.createCriteria().andEqualTo("permissionId", id);
             permissionButtonMapper.deleteByExample(buttonExample);
             log.info("### 按钮权限删除完毕 ###");
         }
         // 4.3API权限
-        else if (CommonConstants.API.equals(type)) {
+        else if (SystemConstants.API.equals(type)) {
             Example apiExample = new Example(PermissionApi.class);
             apiExample.createCriteria().andEqualTo("permissionId", id);
             permissionApiMapper.deleteByExample(apiExample);
@@ -272,7 +272,7 @@ public class PermissionServiceImpl implements PermissionService {
     // 根据type补全权限信息
     private void complePermissionByType(PermissionVO permissionVO, String type, String permissionId) {
         // 菜单权限
-        if (CommonConstants.MENU.equals(type)) {
+        if (SystemConstants.MENU.equals(type)) {
             Example menuExample = new Example(PermissionMenu.class);
             menuExample.createCriteria().andEqualTo("permissionId", permissionId);
             PermissionMenu menuModel = permissionMenuMapper.selectOneByExample(menuExample);
@@ -284,7 +284,7 @@ public class PermissionServiceImpl implements PermissionService {
             log.info("### 菜单权限查询完毕 ###");
         }
         // 按钮权限
-        else if (CommonConstants.BUTTON.equals(type)) {
+        else if (SystemConstants.BUTTON.equals(type)) {
             Example buttonExample = new Example(PermissionButton.class);
             buttonExample.createCriteria().andEqualTo("permissionId", permissionId);
             PermissionButton buttonModel = permissionButtonMapper.selectOneByExample(buttonExample);
@@ -296,7 +296,7 @@ public class PermissionServiceImpl implements PermissionService {
             log.info("### 按钮权限查询完毕 ###");
         }
         // API权限
-        else if (CommonConstants.API.equals(type)) {
+        else if (SystemConstants.API.equals(type)) {
             Example apiExample = new Example(PermissionApi.class);
             apiExample.createCriteria().andEqualTo("permissionId", permissionId);
             PermissionApi apiModel = permissionApiMapper.selectOneByExample(apiExample);
