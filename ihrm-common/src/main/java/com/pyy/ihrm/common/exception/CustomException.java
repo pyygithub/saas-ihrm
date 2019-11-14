@@ -1,4 +1,4 @@
-package com.pyy.ihrm.company.exception;
+package com.pyy.ihrm.common.exception;
 
 import com.pyy.ihrm.common.response.ResultCode;
 import lombok.Getter;

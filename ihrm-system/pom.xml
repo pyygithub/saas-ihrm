@@ -8,6 +8,7 @@
     <artifactId>ihrm-system</artifactId>
     <version>1.0-SNAPSHOT</version>
     <description>系统权限管理微服务</description>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -41,11 +42,6 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- springboot web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <!-- spring aspects -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -73,11 +69,6 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>${pagehelper.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.1.9.RELEASE</version>
         </dependency>
 
     </dependencies>

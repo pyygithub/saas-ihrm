@@ -39,7 +39,7 @@ public class PermissionController {
      * @return
      */
     @ApiOperation(value = "保存权限", notes = "创建新权限")
-    @ApiImplicitParam(name = "record", value = "权限对象", required = true, dataType = "Permission", paramType = "body")
+    @ApiImplicitParam(name = "record", value = "权限对象", required = true, dataType = "PermissionSaveOrUpdateVO", paramType = "body")
     @PostMapping("/permission")
     public Result save(@Valid @RequestBody PermissionSaveOrUpdateVO record) {
         permissionService.save(record);
@@ -55,7 +55,7 @@ public class PermissionController {
     @ApiOperation(value = "修改权限", notes = "根据ID修改权限")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "权限ID", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "record", value = "权限对象", required = true, dataType = "Permission", paramType = "body")
+            @ApiImplicitParam(name = "record", value = "权限对象", required = true, dataType = "PermissionSaveOrUpdateVO", paramType = "body")
     })
     @PutMapping("/permission/{id}")
     public Result update(@Valid @PathVariable(value = "id") String id, @RequestBody PermissionSaveOrUpdateVO record) {

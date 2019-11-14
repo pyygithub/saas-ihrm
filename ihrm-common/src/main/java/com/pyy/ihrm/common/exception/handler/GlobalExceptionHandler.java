@@ -1,8 +1,8 @@
-package com.pyy.ihrm.company.exception.handler;
+package com.pyy.ihrm.common.exception.handler;
 
+import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.common.response.ResultCode;
-import com.pyy.ihrm.company.exception.CustomException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

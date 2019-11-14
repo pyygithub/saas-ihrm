@@ -1,12 +1,13 @@
 package com.pyy.ihrm.system.controller;
 
+import com.pyy.ihrm.common.controller.BaseController;
+import com.pyy.ihrm.common.jwt.JwtIgnore;
+import com.pyy.ihrm.common.jwt.JwtSecured;
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.Result;
-import com.pyy.ihrm.domain.system.vo.UserQueryConditionVO;
-import com.pyy.ihrm.domain.system.vo.UserRolesVO;
-import com.pyy.ihrm.domain.system.vo.UserSaveOrUpdateVO;
-import com.pyy.ihrm.domain.system.vo.UserVO;
+import com.pyy.ihrm.domain.system.vo.*;
 import com.pyy.ihrm.system.service.UserService;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -14,7 +15,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -29,7 +33,7 @@ import java.util.List;
 @Api(tags = "UserController", description = "用户相关接口")
 @RestController
 @RequestMapping(value = "/v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
-public class UserController {
+public class UserController extends BaseController {
 
 	@Autowired
 	private UserService userService;
@@ -40,7 +44,7 @@ public class UserController {
      * @return
      */
     @ApiOperation(value = "保存用户", notes = "创建新用户")
-    @ApiImplicitParam(name = "record", value = "用户对象", required = true, dataType = "User", paramType = "body")
+    @ApiImplicitParam(name = "record", value = "用户对象", required = true, dataType = "UserSaveOrUpdateVO", paramType = "body")
     @PostMapping("/user")
     public Result save(@Valid @RequestBody UserSaveOrUpdateVO record) {
         userService.save(record);
@@ -56,7 +60,7 @@ public class UserController {
     @ApiOperation(value = "修改用户", notes = "根据ID修改用户")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "record", value = "用户对象", required = true, dataType = "User", paramType = "body")
+            @ApiImplicitParam(name = "record", value = "用户对象", required = true, dataType = "UserSaveOrUpdateVO", paramType = "body")
     })
     @PutMapping("/user/{id}")
     public Result update(@Valid @PathVariable(value = "id") String id, @RequestBody UserSaveOrUpdateVO record) {
@@ -138,5 +142,35 @@ public class UserController {
         userService.assignRoles(userId, roleIds);
         return Result.SUCCESS();
     }
-	
+
+
+    /**
+     * 用户登录
+     * @param username
+     * @param password
+     * @return
+     */
+    @ApiOperation(value = "用户登录", notes = "用户登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
+    })
+    @JwtIgnore
+    @PostMapping("/login")
+    public Result login(@Valid @NotBlank(message = "用户名不能为空") @RequestParam String username, @NotBlank(message = "密码不能为空") @RequestParam String password) {
+        String token = userService.login(username, password);
+        return Result.SUCCESS(token);
+    }
+
+    /**
+     * 获取个人信息
+     * @return
+     */
+    @ApiOperation(value = "获取个人信息", notes = "获取个人信息")
+    @JwtSecured("api-user-profile")
+    @GetMapping("/profile")
+    public Result profile() {
+        ProfileVO profileVO = userService.profile(userId);
+        return Result.SUCCESS(profileVO);
+    }
 }

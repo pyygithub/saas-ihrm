@@ -25,12 +25,16 @@ public class User {
 	private String workNumber;
 	/** 企业ID */
 	private String companyId;
+	/** 企业名称 */
+	private String companyName;
 	/** 部门ID */
 	private String departmentId;
 	/** 用户名称 */
 	private String username;
 	/** 密码 */
 	private String password;
+	/** 用户级别：1 平台管理员 2 企业管理员 3 企业用户 */
+	private String level;
 	/** 手机号码 */
 	private String mobile;
 	/** 入职时间 */

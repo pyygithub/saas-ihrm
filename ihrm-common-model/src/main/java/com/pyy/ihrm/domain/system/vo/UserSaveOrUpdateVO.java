@@ -21,12 +21,16 @@ public class UserSaveOrUpdateVO {
 	private String workNumber;
 	@ApiModelProperty("企业ID")
 	private String companyId;
+	@ApiModelProperty("企业名称")
+	private String companyName;
 	@ApiModelProperty("部门ID")
 	private String departmentId;
 	@ApiModelProperty("用户名称")
 	private String username;
 	@ApiModelProperty("密码")
 	private String password;
+	@ApiModelProperty("用户级别：1 平台管理员 2 企业管理员 3 企业用户")
+	private String level;
 	@ApiModelProperty("手机号码")
 	private String mobile;
 	@ApiModelProperty("入职时间")

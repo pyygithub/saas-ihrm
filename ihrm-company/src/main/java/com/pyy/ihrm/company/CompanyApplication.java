@@ -14,7 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * Version: v1.0
  * ========================
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.pyy.ihrm")
 @MapperScan(basePackages = {"com.pyy.ihrm.company.mapper"})
 @EnableTransactionManagement
 public class CompanyApplication {

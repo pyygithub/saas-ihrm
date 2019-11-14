@@ -3,20 +3,27 @@ package com.pyy.ihrm.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.pyy.ihrm.common.exception.CustomException;
+import com.pyy.ihrm.common.jwt.JwtConfig;
+import com.pyy.ihrm.common.jwt.JwtInterceptor;
+import com.pyy.ihrm.common.jwt.JwtTokenUtil;
 import com.pyy.ihrm.common.response.QueryResult;
+import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
-import com.pyy.ihrm.domain.system.vo.UserQueryConditionVO;
-import com.pyy.ihrm.domain.system.vo.UserRolesVO;
-import com.pyy.ihrm.domain.system.vo.UserSaveOrUpdateVO;
-import com.pyy.ihrm.domain.system.vo.UserVO;
+import com.pyy.ihrm.common.utils.SpringSecurityUtil;
+import com.pyy.ihrm.domain.system.vo.*;
 import com.pyy.ihrm.system.constants.CommonConstants;
-import com.pyy.ihrm.system.exception.CustomException;
+import com.pyy.ihrm.system.mapper.PermissionMapper;
+import com.pyy.ihrm.system.mapper.RolePermissionMapper;
 import com.pyy.ihrm.system.mapper.UserMapper;
 import com.pyy.ihrm.system.mapper.UserRoleMapper;
+import com.pyy.ihrm.system.model.Permission;
+import com.pyy.ihrm.system.model.RolePermission;
 import com.pyy.ihrm.system.model.User;
 import com.pyy.ihrm.system.model.UserRole;
 import com.pyy.ihrm.system.service.UserService;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +32,14 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -54,6 +62,18 @@ public class UserServiceImpl implements UserService {
 	@Autowired
     private UserRoleMapper userRoleMapper;
 
+	@Autowired
+    private RolePermissionMapper rolePermissionMapper;
+
+	@Autowired
+    private PermissionMapper permissionMapper;
+
+	@Autowired
+    private JwtConfig jwtConfig;
+
+	@Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     /**
      * 用户保存
      * @param userSaveOrUpdateVO
@@ -70,6 +90,10 @@ public class UserServiceImpl implements UserService {
         userModel.setCreateName(userSaveOrUpdateVO.getOperaterName());
         userModel.setCreateTime(new Timestamp(System.currentTimeMillis()));
         userModel.setIsDeleted(CommonConstants.UN_DELETED);
+
+        // 密码加密
+        String encoderPassword = SpringSecurityUtil.encoderPassword(userModel.getPassword());
+        userModel.setPassword(encoderPassword);
 
         userMapper.insert(userModel);
         log.info("### 用户保存成功 ###");
@@ -142,10 +166,7 @@ public class UserServiceImpl implements UserService {
         log.info("### 用户Model转换VO成功， userRolesVO={}###", userRolesVO);
 
         // 3.根据用户ID查询拥有角色ID集合
-        Example userRoleExample = new Example(UserRole.class);
-        userRoleExample.createCriteria().andEqualTo("userId", id);
-        List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
-        List<String> roleIds = userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        List<String> roleIds = getRoleIdsByUserId(id);
         log.info("### 当前用户【userId={}】拥有角色集合【roleIds={}】###", id, roleIds);
 
         // 4.补全角色ID集合
@@ -153,6 +174,7 @@ public class UserServiceImpl implements UserService {
 
         return userRolesVO;
 	}
+
 
     /**
      * 用户模糊查询
@@ -240,5 +262,153 @@ public class UserServiceImpl implements UserService {
             });
         }
         log.info("### 用户【userId={}】新角色【roleIds={}】关系分配完毕 ###", userId, roleIds);
+    }
+
+    /**
+     * 用户登录
+     * @param username
+     * @param password
+     */
+    @Override
+    public String login(String username, String password) {
+        Example userExample = new Example(User.class);
+        userExample.createCriteria()
+                .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                .andEqualTo("username", username);
+        User user = userMapper.selectOneByExample(userExample);
+        // 登录失败
+        if (user == null || !SpringSecurityUtil.checkpassword(password, user.getPassword())) {
+            log.info("### 登录失败：用户不存在或密码错误 ###");
+            throw new CustomException(ResultCode.USERNAME_OR_PASSWORD_ERROR);
+        }
+        // 登录成功
+        else {
+            // API权限字符串
+            List<String> roleIds = this.getRoleIdsByUserId(user.getId());
+            // 获取到所有可以访问的API权限
+            String apis = this.getApiCodesByRoleIds(roleIds);
+
+            Map<String, Object> extAttribute = new HashMap<>();
+            extAttribute.put("apis", apis);
+            extAttribute.put("companyId", user.getCompanyId());
+            extAttribute.put("companyName", user.getCompanyName());
+            String token = jwtTokenUtil.createJWT(user.getId(), user.getUsername(), extAttribute, jwtConfig);
+            log.info("### 用户【username={}】登录成功 ###", username);
+            return token;
+        }
+    }
+
+    /**
+     * 获取个人信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public ProfileVO profile(String userId) {
+        // 根据用户id查询用户信息
+        User user = userMapper.selectByPrimaryKey(userId);
+        // 根据不同用户级别获取用户权限
+
+
+
+        // 根据用户id查询关联权限集合
+        Map<String, Object> permissions = this.getPermissionsByUserId(userId);
+
+
+
+
+        ProfileVO profileVO = new ProfileVO();
+        profileVO.setUsername(user.getUsername());
+        profileVO.setMobile(user.getMobile());
+        profileVO.setCompanyName(user.getCompanyName());
+        profileVO.setPermissions(permissions);
+        log.info("### 获取个人信息完毕：profileVO={} ###", profileVO);
+
+        return profileVO;
+    }
+
+    // 根据用户id查询关联权限集合
+    private Map<String, Object> getPermissionsByUserId(String userId) {
+        Map<String, Object> permissions = new HashMap<>();
+
+        // 根据用户ID查询关联角色ID
+        List<String> roleIds = this.getRoleIdsByUserId(userId);
+
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            // 根据角色id查询关联权限ID
+            Example rolePermissionExample = new Example(RolePermission.class);
+            rolePermissionExample.createCriteria().andIn("roleId", roleIds);
+            List<RolePermission> rolePermissionList = rolePermissionMapper.selectByExample(rolePermissionExample);
+
+            // 根据权限id查询权限详情
+            if (!CollectionUtils.isEmpty(rolePermissionList)) {
+                List<String> permissionIds = rolePermissionList.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
+                // 去掉重复ID
+                Set<String> removedDuplicatePermissionIds = new HashSet(permissionIds);
+                // 查询权限
+                Example permissionExample = new Example(Permission.class);
+                permissionExample.createCriteria()
+                        .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                        .andIn("id", removedDuplicatePermissionIds);
+                List<Permission> apiPermissionList = permissionMapper.selectByExample(permissionExample);
+                // 按类型分类
+                List<String> menus = new ArrayList<>(20);
+                List<String> buttons = new ArrayList<>(30);
+                List<String> apis = new ArrayList<>(20);
+                for (Permission permission : apiPermissionList) {
+                    String code = permission.getCode();
+                    String type = permission.getType();
+                    if (CommonConstants.MENU.equalsIgnoreCase(type)) {
+                        menus.add(code);
+                    } else if (CommonConstants.BUTTON.equalsIgnoreCase(type)) {
+                        buttons.add(code);
+                    } else if (CommonConstants.API.equalsIgnoreCase(type)) {
+                        apis.add(code);
+                    }
+                }
+                permissions.put("menus", menus);
+                permissions.put("buttons", buttons);
+                permissions.put("apis", apis);
+            }
+        }
+        return permissions;
+    }
+
+    // 根据用户id查询关联角色ID集合
+    private List<String> getRoleIdsByUserId(String userId) {
+        Example userRoleExample = new Example(UserRole.class);
+        userRoleExample.createCriteria().andEqualTo("userId", userId);
+        List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
+        return userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+    }
+
+    // 根据角色ID集合查询关联API权限字符串
+    private String getApiCodesByRoleIds(List<String> roleIds) {
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            // 根据角色id查询关联权限ID
+            Example rolePermissionExample = new Example(RolePermission.class);
+            rolePermissionExample.createCriteria().andIn("roleId", roleIds);
+            List<RolePermission> rolePermissionList = rolePermissionMapper.selectByExample(rolePermissionExample);
+            if (!CollectionUtils.isEmpty(rolePermissionList)) {
+                List<String> permissionIds = rolePermissionList.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
+                // 去掉重复ID
+                Set<String> removedDuplicatePermissionIds = new HashSet(permissionIds);
+                for (String permissionId : removedDuplicatePermissionIds) {
+                    // 查询所有API权限
+                    Example permissionExample = new Example(Permission.class);
+                    permissionExample.createCriteria()
+                            .andEqualTo("isDeleted", CommonConstants.UN_DELETED)
+                            .andEqualTo("id", permissionId)
+                            .andEqualTo("type", CommonConstants.API);
+                    List<Permission> apiPermissionList = permissionMapper.selectByExample(permissionExample);
+                    List<String> apiCodeList = apiPermissionList.stream().map(Permission::getCode).collect(Collectors.toList());
+
+                    String apis = String.join(",", apiCodeList);
+                    log.info("### 当前用户拥有的API权限标识：apis={} ###", apis);
+                    return apis;
+                }
+            }
+        }
+        return null;
     }
 }

@@ -42,7 +42,7 @@ public class RoleController {
      * @return
      */
     @ApiOperation(value = "保存角色", notes = "创建新角色")
-    @ApiImplicitParam(name = "record", value = "角色对象", required = true, dataType = "Role", paramType = "body")
+    @ApiImplicitParam(name = "record", value = "角色对象", required = true, dataType = "RoleSaveOrUpdateVO", paramType = "body")
     @PostMapping("/role")
     public Result save(@Valid @RequestBody RoleSaveOrUpdateVO record) {
         roleService.save(record);
@@ -58,7 +58,7 @@ public class RoleController {
     @ApiOperation(value = "修改角色", notes = "根据ID修改角色")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "角色ID", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "record", value = "角色对象", required = true, dataType = "Role", paramType = "body")
+            @ApiImplicitParam(name = "record", value = "角色对象", required = true, dataType = "RoleSaveOrUpdateVO", paramType = "body")
     })
     @PutMapping("/role/{id}")
     public Result update(@Valid @PathVariable(value = "id") String id, @RequestBody RoleSaveOrUpdateVO record) {

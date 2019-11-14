@@ -1,12 +1,12 @@
 package com.pyy.ihrm.system.service;
 
 import com.pyy.ihrm.common.response.QueryResult;
-import com.pyy.ihrm.domain.system.vo.UserQueryConditionVO;
-import com.pyy.ihrm.domain.system.vo.UserRolesVO;
-import com.pyy.ihrm.domain.system.vo.UserSaveOrUpdateVO;
-import com.pyy.ihrm.domain.system.vo.UserVO;
+import com.pyy.ihrm.domain.system.vo.*;
+import io.jsonwebtoken.Claims;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -70,4 +70,18 @@ public interface UserService {
      * @param roleIds
      */
     void assignRoles(String userId, List<String> roleIds);
+
+    /**
+     * 用户登录
+     * @param username
+     * @param password
+     */
+    String login(String username, String password);
+
+    /**
+     * 获取个人信息
+     * @param userId
+     * @return
+     */
+    ProfileVO profile(String userId);
 }

@@ -1,16 +1,9 @@
 package com.pyy.ihrm.system;
 
-/**
- * ========================
- * Created with IntelliJ IDEA.
- * User：pyy
- * Date：2019/11/13 10:29
- * Version: v1.0
- * ========================
- */
-
+import com.pyy.ihrm.common.jwt.JwtTokenUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -23,12 +16,17 @@ import tk.mybatis.spring.annotation.MapperScan;
  * Version: v1.0
  * ========================
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.pyy.ihrm")
 @MapperScan(basePackages = {"com.pyy.ihrm.system.mapper"})
 @EnableTransactionManagement
 public class SystemApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SystemApplication.class, args);
+    }
+
+    @Bean
+    public JwtTokenUtil jwtTokenUtil() {
+        return new JwtTokenUtil();
     }
 }

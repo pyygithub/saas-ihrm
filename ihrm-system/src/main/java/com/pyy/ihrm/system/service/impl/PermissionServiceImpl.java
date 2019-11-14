@@ -1,15 +1,11 @@
 package com.pyy.ihrm.system.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-
-import com.pyy.ihrm.common.response.QueryResult;
+import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.domain.system.vo.*;
 import com.pyy.ihrm.system.constants.CommonConstants;
-import com.pyy.ihrm.system.exception.CustomException;
 import com.pyy.ihrm.system.mapper.PermissionApiMapper;
 import com.pyy.ihrm.system.mapper.PermissionButtonMapper;
 import com.pyy.ihrm.system.mapper.PermissionMapper;

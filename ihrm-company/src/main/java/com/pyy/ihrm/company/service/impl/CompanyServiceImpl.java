@@ -7,7 +7,7 @@ import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.company.constants.CommonConstants;
-import com.pyy.ihrm.company.exception.CustomException;
+import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.company.mapper.CompanyMapper;
 import com.pyy.ihrm.company.model.Company;
 import com.pyy.ihrm.company.service.CompanyService;

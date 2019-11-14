@@ -43,7 +43,7 @@ public class DepartmentController {
      * @return
      */
     @ApiOperation(value = "保存部门", notes = "创建新部门")
-    @ApiImplicitParam(name = "record", value = "部门对象", required = true, dataType = "Department", paramType = "body")
+    @ApiImplicitParam(name = "record", value = "部门对象", required = true, dataType = "DepartmentSaveOrUpdateVO", paramType = "body")
     @PostMapping("/department")
     public Result save(@Valid @RequestBody DepartmentSaveOrUpdateVO record) {
         // 后面集成JWT后完善
@@ -64,7 +64,7 @@ public class DepartmentController {
     @ApiOperation(value = "修改部门", notes = "根据ID修改部门")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "部门ID", required = true, dataType = "String", paramType = "path"),
-            @ApiImplicitParam(name = "record", value = "部门对象", required = true, dataType = "Department", paramType = "body")
+            @ApiImplicitParam(name = "record", value = "部门对象", required = true, dataType = "DepartmentSaveOrUpdateVO", paramType = "body")
     })
     @PutMapping("/department/{id}")
     public Result update(@Valid @PathVariable(value = "id") String id, @RequestBody DepartmentSaveOrUpdateVO record) {

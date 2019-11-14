@@ -11,7 +11,7 @@ import com.pyy.ihrm.domain.system.vo.RoleQueryConditionVO;
 import com.pyy.ihrm.domain.system.vo.RoleSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.RoleVO;
 import com.pyy.ihrm.system.constants.CommonConstants;
-import com.pyy.ihrm.system.exception.CustomException;
+import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.system.mapper.PermissionApiMapper;
 import com.pyy.ihrm.system.mapper.PermissionMapper;
 import com.pyy.ihrm.system.mapper.RoleMapper;

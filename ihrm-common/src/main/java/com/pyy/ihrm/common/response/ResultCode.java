@@ -18,9 +18,13 @@ public enum ResultCode {
     /* 错误状态码 */
     FAIL(500,"ERROR"),
 
+    TOKEN_EXPIRED(401,"登录状态过期"),
+    TOKEN_INVALID(401,"无效TOKEN"),
+
     /* 参数错误：10001-19999 */
     PARAM_IS_INVALID(10001, "参数无效"),
-    PARAM_IS_BLANK(10002, "参数为空"),
+    UNAUTHENTICATED(10002,"您还未登录"),
+    UNAUTHORISE(10003,"权限不足"),
     PARAM_TYPE_BIND_ERROR(10003, "参数格式错误"),
     ILLEGAL_PARAM(10004, "查询标识参数非法！（00=全部 01=结构化 02=非结构化）"),
     FILE_MAX_SIZE_OVERFLOW(10005, "上传尺寸过大"),
@@ -32,8 +36,7 @@ public enum ResultCode {
     PWD_NO_VALID(100011, "密码必须是6-20 位，字母、数字、字符(`~!@#$%^&*)"),
 
     /* 用户错误：20001-29999*/
-    USER_NOT_LOGGED_IN(20001, "用户未登录"),
-    USER_LOGIN_ERROR(20002, "账号不存在或密码错误"),
+    USERNAME_OR_PASSWORD_ERROR(20001, "账号不存在或密码错误"),
     USER_ACCOUNT_FORBIDDEN(20003, "账号已被禁用"),
     USER_NOT_EXIST(20004, "用户不存在"),
     USER_HAS_EXISTED(20005, "用户已存在"),
@@ -68,7 +71,7 @@ public enum ResultCode {
     /* 权限错误 */
     PERMISSION_UNAUTHENTICATED(70001,"此操作需要登陆系统！"),
     PERMISSION_UNAUTHORISE(70002,"权限不足，无权操作！"),
-    PERMISSION_EXPIRE(401,"登录状态过期！"),
+    PERMISSION_SIGNATURE_ERROR(70003, "签名失败"),
     PERMISSION_LIMIT(70004, "访问次数受限制");
 
     //操作代码
