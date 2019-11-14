@@ -69,11 +69,10 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                         request.setAttribute(USER_CLAIMS, claims);
                         log.info("### 鉴权通过，放行请求 ###");
                         return true;
-                    } else {
-                        log.info("### 权限不足，禁止访问 ###");
-                        throw new CustomException(ResultCode.UNAUTHORISE);
                     }
                 }
+                log.info("### 权限不足，禁止访问 ###");
+                throw new CustomException(ResultCode.UNAUTHORISE);
             }
         }
         log.info("### 用户未登录，请先登录 ###");

@@ -9,6 +9,7 @@ import com.pyy.ihrm.domain.system.vo.*;
 import com.pyy.ihrm.system.service.UserService;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import io.swagger.annotations.Api;
@@ -46,6 +47,7 @@ public class UserController extends BaseController {
     @ApiOperation(value = "保存用户", notes = "创建新用户")
     @ApiImplicitParam(name = "record", value = "用户对象", required = true, dataType = "UserSaveOrUpdateVO", paramType = "body")
     @PostMapping("/user")
+    @JwtIgnore
     public Result save(@Valid @RequestBody UserSaveOrUpdateVO record) {
         userService.save(record);
         return Result.SUCCESS();
@@ -101,6 +103,7 @@ public class UserController extends BaseController {
      */
     @ApiOperation(value = "用户模糊查询", notes = "用户不带分页模糊查询")
     @GetMapping("/users")
+    @JwtSecured(value = "API-USER-LIST")
     public Result<List<UserVO>> listByParams(UserQueryConditionVO queryConditionVO) {
         List<UserVO> queryResult = userService.listByParams(queryConditionVO);
         return Result.SUCCESS(queryResult);
@@ -115,10 +118,11 @@ public class UserController extends BaseController {
      */
     @ApiOperation(value = "用户分页查询", notes = "用户分页模糊查询")
     @ApiImplicitParams({
-             @ApiImplicitParam(name = "page", value = "当前页码", required = true, dataType = "Integer", paramType = "query"),
-             @ApiImplicitParam(name = "size", value = "分页尺寸", required = true, dataType = "Integer", paramType = "query")
+             @ApiImplicitParam(name = "page", value = "当前页码", required = true, dataType = "int", paramType = "query"),
+             @ApiImplicitParam(name = "size", value = "分页尺寸", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/users/page")
+    @JwtSecured(value = "API-USER-LIST")
     public Result<QueryResult<UserVO>> listByPageAndParams(UserQueryConditionVO queryConditionVO,
                                                            @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                            @RequestParam(value = "size", defaultValue = "10") Integer size) {

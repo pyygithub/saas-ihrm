@@ -37,10 +37,10 @@ public class JwtTokenUtil {
                     .parseClaimsJws(jsonWebToken).getBody();
             return claims;
         } catch (ExpiredJwtException eje) {
-            log.error("===== Token过期 =====", eje);
+            log.info("===== Token过期 =====");
             throw new CustomException(ResultCode.TOKEN_EXPIRED);
         } catch (Exception e){
-            log.error("===== token解析异常 =====", e);
+            log.info("===== token解析异常 =====");
             throw new CustomException(ResultCode.TOKEN_INVALID);
         }
     }
