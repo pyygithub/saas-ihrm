@@ -32,10 +32,10 @@ public class GlobalExceptionHandler {
 	public Result handleException(CustomException e) {
 
         if (e.getResultCode() != null) {
-            log.error("### 异常信息:code={}, msg={} ###", e.getResultCode().code(), e.getResultCode().message());
+            log.error("### 异常信息：code={}, msg={} ###", e.getResultCode().code(), e.getResultCode().message());
             return new Result(e.getResultCode());
         } else {
-            log.error("### 异常信息:code={}, msg={} ###", e.getCode(), e.getMessage());
+            log.error("### 异常信息：code={}, msg={} ###", e.getCode(), e.getMessage());
             return new Result(e.getCode(), e.getMessage());
         }
 	}

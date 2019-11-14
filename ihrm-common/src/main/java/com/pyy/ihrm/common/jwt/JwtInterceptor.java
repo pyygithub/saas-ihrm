@@ -37,6 +37,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
+        log.info("### 请求地址：{} ###", request.getRequestURL());
         HandlerMethod handlerMethod = null;
         if (handler instanceof HandlerMethod) {
             handlerMethod = (HandlerMethod) handler;
