@@ -2,6 +2,7 @@ package com.pyy.ihrm.system.service;
 
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.domain.system.vo.UserQueryConditionVO;
+import com.pyy.ihrm.domain.system.vo.UserRolesVO;
 import com.pyy.ihrm.domain.system.vo.UserSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.UserVO;
 
@@ -44,7 +45,7 @@ public interface UserService {
      * 根据用户ID查询
      * @param id
      */
-	UserVO findById(String id);
+    UserRolesVO findById(String id);
 
     /**
      * 用户模糊查询

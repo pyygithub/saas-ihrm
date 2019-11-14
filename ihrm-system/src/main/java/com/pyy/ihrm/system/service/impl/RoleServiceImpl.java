@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
+import com.pyy.ihrm.domain.system.vo.RolePermissionsVO;
 import com.pyy.ihrm.domain.system.vo.RoleQueryConditionVO;
 import com.pyy.ihrm.domain.system.vo.RoleSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.RoleVO;
@@ -128,17 +129,30 @@ public class RoleServiceImpl implements RoleService {
     * @param id
     */
 	@Override
-	public RoleVO findById(String id) {
+	public RolePermissionsVO findById(String id) {
+	    // 1.根据id查询角色信息
 		Role roleModel = roleMapper.selectByPrimaryKey(id);
 		if (roleModel == null) {
             throw new CustomException(ResultCode.RESULT_DATA_NONE, "角色,id=" + id);
         }
         log.info("### 角色查询成功, role={}###", JSON.toJSONString(roleModel));
-        // model转换vo
-        RoleVO roleVO = new RoleVO();
-        BeanUtils.copyProperties(roleModel, roleVO);
-        log.info("### 角色Model转换VO成功， roleVO={}###", roleVO);
-        return roleVO;
+
+        // 2.Model转换vo
+        RolePermissionsVO rolePermissionVO = new RolePermissionsVO();
+        BeanUtils.copyProperties(roleModel, rolePermissionVO);
+        log.info("### 角色Model转换VO成功， rolePermissionVO={}###", rolePermissionVO);
+
+        // 3.根据角色ID查询角色关联权限ID集合
+        Example rolePermissionExample = new Example(RolePermission.class);
+        rolePermissionExample.createCriteria().andEqualTo("roleId", id);
+        List<RolePermission> rolePermissionList = rolePermissionMapper.selectByExample(rolePermissionExample);
+        List<String> permissionIds = rolePermissionList.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
+        log.info("### 角色【roleId={}】关联权限集合【permissionIds={}】###", id, permissionIds);
+
+        // 4.补全权限属性集合
+        rolePermissionVO.setPermissionIds(permissionIds);
+
+        return rolePermissionVO;
 	}
 
   /**

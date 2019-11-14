@@ -7,6 +7,7 @@ import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
 import com.pyy.ihrm.domain.system.vo.UserQueryConditionVO;
+import com.pyy.ihrm.domain.system.vo.UserRolesVO;
 import com.pyy.ihrm.domain.system.vo.UserSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.UserVO;
 import com.pyy.ihrm.system.constants.CommonConstants;
@@ -30,6 +31,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -126,7 +128,7 @@ public class UserServiceImpl implements UserService {
     * @param id
     */
 	@Override
-	public UserVO findById(String id) {
+	public UserRolesVO findById(String id) {
 	    // 1.根据用户查询用户
 		User userModel = userMapper.selectByPrimaryKey(id);
 		if (userModel == null) {
@@ -135,10 +137,21 @@ public class UserServiceImpl implements UserService {
         log.info("### 用户查询成功, user={}###", JSON.toJSONString(userModel));
 
 		// 2.Model转换VO
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(userModel, userVO);
-        log.info("### 用户Model转换VO成功， userVO={}###", userVO);
-        return userVO;
+        UserRolesVO userRolesVO = new UserRolesVO();
+        BeanUtils.copyProperties(userModel, userRolesVO);
+        log.info("### 用户Model转换VO成功， userRolesVO={}###", userRolesVO);
+
+        // 3.根据用户ID查询拥有角色ID集合
+        Example userRoleExample = new Example(UserRole.class);
+        userRoleExample.createCriteria().andEqualTo("userId", id);
+        List<UserRole> userRoleList = userRoleMapper.selectByExample(userRoleExample);
+        List<String> roleIds = userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        log.info("### 当前用户【userId={}】拥有角色集合【roleIds={}】###", id, roleIds);
+
+        // 4.补全角色ID集合
+        userRolesVO.setRoleIds(roleIds);
+
+        return userRolesVO;
 	}
 
     /**

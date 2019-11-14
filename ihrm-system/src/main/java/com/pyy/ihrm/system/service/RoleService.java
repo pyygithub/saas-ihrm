@@ -1,6 +1,7 @@
 package com.pyy.ihrm.system.service;
 
 import com.pyy.ihrm.common.response.QueryResult;
+import com.pyy.ihrm.domain.system.vo.RolePermissionsVO;
 import com.pyy.ihrm.domain.system.vo.RoleQueryConditionVO;
 import com.pyy.ihrm.domain.system.vo.RoleSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.RoleVO;
@@ -43,7 +44,7 @@ public interface RoleService {
      * 根据角色ID查询
      * @param id
      */
-	RoleVO findById(String id);
+    RolePermissionsVO findById(String id);
 
     /**
      * 角色模糊查询

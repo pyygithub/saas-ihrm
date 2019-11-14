@@ -3,6 +3,7 @@ package com.pyy.ihrm.system.controller;
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.domain.system.vo.UserQueryConditionVO;
+import com.pyy.ihrm.domain.system.vo.UserRolesVO;
 import com.pyy.ihrm.domain.system.vo.UserSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.UserVO;
 import com.pyy.ihrm.system.service.UserService;
@@ -84,8 +85,8 @@ public class UserController {
     @ApiOperation(value = "用户查询", notes = "根据ID用户查询")
     @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "String", paramType = "path")
     @GetMapping("/user")
-    public Result<UserVO> findById(@Valid @PathVariable(value = "id") String id) {
-        UserVO queryResult = userService.findById(id);
+    public Result<UserRolesVO> findById(@Valid @PathVariable(value = "id") String id) {
+        UserRolesVO queryResult = userService.findById(id);
         return Result.SUCCESS(queryResult);
     }
 

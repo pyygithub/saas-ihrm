@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.Result;
+import com.pyy.ihrm.domain.system.vo.RolePermissionsVO;
 import com.pyy.ihrm.domain.system.vo.RoleQueryConditionVO;
 import com.pyy.ihrm.domain.system.vo.RoleSaveOrUpdateVO;
 import com.pyy.ihrm.domain.system.vo.RoleVO;
@@ -86,9 +87,9 @@ public class RoleController {
     @ApiOperation(value = "角色查询", notes = "根据ID角色查询")
     @ApiImplicitParam(name = "id", value = "角色ID", required = true, dataType = "String", paramType = "path")
     @GetMapping("/role")
-    public Result<RoleVO> findById(@Valid @PathVariable(value = "id") String id) {
-        RoleVO queryResult = roleService.findById(id);
-        return Result.SUCCESS(queryResult);
+    public Result<RolePermissionsVO> findById(@Valid @PathVariable(value = "id") String id) {
+        RolePermissionsVO rolePermissionsVO = roleService.findById(id);
+        return Result.SUCCESS(rolePermissionsVO);
     }
 
     /**
