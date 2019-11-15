@@ -13,20 +13,21 @@ import * as filters from './filters' // global filters
 // font-awesome
 import 'font-awesome/css/font-awesome.css'
 import './mock' // simulation data
+
 /*
 * 注册 - 业务模块
 */
 import dashboard from '@/modules/dashboard/' // 面板
-import demo from '@/modules/demo/' // 面板
-import saasClients from '@/modules/saas-clients/' // 企业管理
+import company from '@/modules/company/' // 企业管理
+import departments from '@/modules/departments/' // 组织机构管理
 
 import tools from './utils/common.js'
 Vue.prototype.$tools = tools
 
 Vue.use(tools)
 Vue.use(dashboard, store)
-Vue.use(demo, store)
-Vue.use(saasClients,store)
+Vue.use(company,store)
+Vue.use(departments, store)
 
 
 /*

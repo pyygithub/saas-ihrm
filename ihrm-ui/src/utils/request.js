@@ -9,7 +9,8 @@ const instance = axios.create({
   timeout: 5000 // request timeout
 })
 
-const ok = "10000";
+// 成功响应码
+const ok = "200";
 
 // request interceptor
 instance.interceptors.request.use(
@@ -31,13 +32,12 @@ instance.interceptors.request.use(
 // respone interceptor
 instance.interceptors.response.use(
   response => {
-    // debugger
     const res = response.data
-    const errCode = res.code
-    if (errCode !== undefined) {
+    const resCode = res.code
+    if (resCode !== undefined) {
       // debugger
       // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      if (errCode === 50008 || errCode === 50012 || errCode === 50014) {
+      if (resCode === 50008 || resCode === 50012 || resCode === 50014) {
         Message({
           message: '你已被登出，请重新登录',
           type: 'error',
@@ -47,7 +47,7 @@ instance.interceptors.response.use(
           location.reload() // 为了重新实例化vue-router对象 避免bug
         })
         return Promise.reject(new Error('token expired'))
-      }else if (errCode != ok) {
+      }else if (resCode != ok) {
         Message({
           message: res.message,
           type: 'error',

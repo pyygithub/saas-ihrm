@@ -1,4 +1,12 @@
 spring:
+  #日期格式化配置
+  jackson:
+    #如果使用字符串表示，用这行设置格式
+    date-format: yyyy-MM-dd hh:mm:ss
+    timezone: GMT+8
+    serialization:
+      #使用时间戳，使用数值timestamp表示日期
+      write-dates-as-timestamps: true
   datasource:
     #1.JDBC
     type: com.alibaba.druid.pool.DruidDataSource

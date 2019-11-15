@@ -5,6 +5,7 @@ import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.Base64Util;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -22,6 +23,7 @@ import java.util.Map;
  * ========================
  */
 @Slf4j
+@Component
 public class JwtTokenUtil {
 
     /**

@@ -39,7 +39,7 @@
     import {list} from '@/api/example/table'
 
     export default {
-        name: 'saas-clients-table-index',
+        name: 'company-table-index',
         // 数据模型（双向绑定）
         data() {
             return {

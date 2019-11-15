@@ -18,13 +18,12 @@ public enum ResultCode {
     /* 错误状态码 */
     FAIL(500,"ERROR"),
 
-    TOKEN_EXPIRED(401,"登录状态过期"),
-    TOKEN_INVALID(401,"无效TOKEN"),
-
     /* 参数错误：10001-19999 */
     PARAM_IS_INVALID(10001, "参数无效"),
     UNAUTHENTICATED(10002,"您还未登录"),
     UNAUTHORISE(10003,"权限不足"),
+    TOKEN_EXPIRED(10004,"登录状态过期"),
+    TOKEN_INVALID(10005,"无效TOKEN"),
     PARAM_TYPE_BIND_ERROR(10003, "参数格式错误"),
     ILLEGAL_PARAM(10004, "查询标识参数非法！（00=全部 01=结构化 02=非结构化）"),
     FILE_MAX_SIZE_OVERFLOW(10005, "上传尺寸过大"),

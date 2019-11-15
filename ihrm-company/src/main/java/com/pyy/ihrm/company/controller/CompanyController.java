@@ -99,7 +99,7 @@ public class CompanyController {
      */
     @ApiOperation(value = "企业信息查询", notes = "根据ID企业信息查询")
     @ApiImplicitParam(name = "id", value = "企业信息ID", required = true, dataType = "String", paramType = "path")
-    @GetMapping("/company")
+    @GetMapping("/company/{id}")
     public Result<CompanyVO> findById(@Valid @PathVariable(value = "id") String id) {
         CompanyVO queryResult = companyService.findById(id);
         return Result.SUCCESS(queryResult);

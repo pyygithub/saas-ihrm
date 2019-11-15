@@ -1,6 +1,6 @@
 export default {
     profile:{
-        "code" : "10000",
+        "code" : "200",
         "success" : true,
         "message" : "登录成功",
         "data" : {
