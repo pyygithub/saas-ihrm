@@ -1,4 +1,4 @@
-package com.pyy.ihrm.system.controller;
+package com.pyy.ihrm.system.rest;
 
 import java.util.List;
 

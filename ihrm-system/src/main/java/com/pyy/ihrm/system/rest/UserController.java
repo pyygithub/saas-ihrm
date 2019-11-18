@@ -1,8 +1,8 @@
-package com.pyy.ihrm.system.controller;
+package com.pyy.ihrm.system.rest;
 
 import com.pyy.ihrm.common.controller.BaseController;
-import com.pyy.ihrm.common.jwt.TokenIgnore;
-import com.pyy.ihrm.common.jwt.RequiresPermissions;
+import com.pyy.ihrm.common.token.annonation.TokenIgnore;
+import com.pyy.ihrm.common.token.annonation.RequiresPermissions;
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.domain.system.vo.*;
@@ -16,7 +16,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -145,33 +144,4 @@ public class UserController extends BaseController {
     }
 
 
-    /**
-     * 用户登录
-     * @param username
-     * @param password
-     * @return
-     */
-    @ApiOperation(value = "用户登录", notes = "用户登录")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
-    })
-    @TokenIgnore
-    @PostMapping("/login")
-    public Result login(@Valid @NotBlank(message = "用户名不能为空") @RequestParam String username, @NotBlank(message = "密码不能为空") @RequestParam String password) {
-        String token = userService.login(username, password);
-        return Result.SUCCESS(token);
-    }
-
-    /**
-     * 获取个人信息
-     * @return
-     */
-    @ApiOperation(value = "获取个人信息", notes = "获取个人信息")
-    @RequiresPermissions("api-user-profile")
-    @GetMapping("/profile")
-    public Result profile() {
-        ProfileVO profileVO = userService.profile(userId);
-        return Result.SUCCESS(profileVO);
-    }
 }

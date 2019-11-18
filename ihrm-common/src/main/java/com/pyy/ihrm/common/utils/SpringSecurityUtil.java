@@ -24,9 +24,4 @@ public class SpringSecurityUtil {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		return encoder.matches(password, secret);
 	}
-
-
-	public static void main(String[] args) {
-		System.out.println(encoderPassword("123456"));
-	}
 }

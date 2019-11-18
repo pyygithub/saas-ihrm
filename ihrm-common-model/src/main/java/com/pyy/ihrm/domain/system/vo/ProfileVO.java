@@ -30,6 +30,6 @@ public class ProfileVO {
     @ApiModelProperty("企业名称")
     private String companyName;
 
-    @ApiModelProperty("权限信息")
-    private Map<String, Object> permissions = new HashMap<>();
+    @ApiModelProperty("角色包含权限信息")
+    private Map<String, Object> roles = new HashMap<>();
 }

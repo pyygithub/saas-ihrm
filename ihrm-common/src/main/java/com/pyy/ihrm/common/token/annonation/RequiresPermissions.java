@@ -1,4 +1,4 @@
-package com.pyy.ihrm.common.jwt;
+package com.pyy.ihrm.common.token.annonation;
 
 import java.lang.annotation.*;
 

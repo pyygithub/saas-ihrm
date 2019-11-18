@@ -1,9 +1,7 @@
 package com.pyy.ihrm.system;
 
-import com.pyy.ihrm.common.jwt.JwtTokenUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -23,10 +21,5 @@ public class SystemApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SystemApplication.class, args);
-    }
-
-    @Bean
-    public JwtTokenUtil jwtTokenUtil() {
-        return new JwtTokenUtil();
     }
 }

@@ -1,7 +1,11 @@
-package com.pyy.ihrm.common.jwt;
+package com.pyy.ihrm.common.token.jwt;
 
 import com.pyy.ihrm.common.exception.CustomException;
 import com.pyy.ihrm.common.response.ResultCode;
+import com.pyy.ihrm.common.token.TokenConfig;
+import com.pyy.ihrm.common.token.TokenService;
+import com.pyy.ihrm.common.token.annonation.RequiresPermissions;
+import com.pyy.ihrm.common.token.annonation.TokenIgnore;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private JwtConfig jwtConfig;
+    private TokenConfig tokenConfig;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenService tokenService;
 
     public static final String USER_CLAIMS = "user_claims";
 
@@ -48,14 +52,14 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
         // 请求中获取key为Authorization的头信息
-        String authorization = request.getHeader(jwtConfig.getTokenKey());
+        String authorization = request.getHeader(tokenConfig.getTokenKey());
         log.info("### authorization={} ###", authorization);
         // 判断请求头信息是否为空，或者是否已Bearer开头
-        if (!StringUtils.isEmpty(authorization)  && authorization.startsWith(jwtConfig.getTokenPrefix())) {
+        if (!StringUtils.isEmpty(authorization)  && authorization.startsWith(tokenConfig.getTokenPrefix())) {
             // 前后端约定头信息内容以 Bearer+空格+token 形式组成
             String token = authorization.replace("Bearer ", "");
             // 验证token，并返回claims
-            Claims claims = jwtTokenUtil.parseJWT(token, jwtConfig.getBase64Secret());
+            Claims claims = (Claims) tokenService.parseToken(token, tokenConfig.getBase64Secret());
             if (claims != null) {
                 // 通过claims获取到当前用户的可访问API权限字符串
                 String apis = (String) claims.get("apis"); //api-user-delete,api-user-update

@@ -1,6 +1,6 @@
 package com.pyy.ihrm.common.controller;
 
-import com.pyy.ihrm.common.jwt.JwtInterceptor;
+import com.pyy.ihrm.common.token.jwt.JwtInterceptor;
 import com.pyy.ihrm.common.utils.Base64Util;
 import io.jsonwebtoken.Claims;
 import org.springframework.web.bind.annotation.ModelAttribute;

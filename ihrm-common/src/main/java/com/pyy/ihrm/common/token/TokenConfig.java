@@ -1,4 +1,4 @@
-package com.pyy.ihrm.common.jwt;
+package com.pyy.ihrm.common.token;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Data
 @ConfigurationProperties(prefix = "audience")
 @Component
-public class JwtConfig {
+public class TokenConfig {
     /** token key */
     public String tokenKey = "Authorization";
 

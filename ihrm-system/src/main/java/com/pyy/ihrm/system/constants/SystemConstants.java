@@ -29,8 +29,9 @@ public interface SystemConstants {
     String LEAVE_OFFICE = "2";
 
     /** 启用状态： 0=禁用  1=启用 */
-    String ENABLE = "0";
-    String DISABLED = "1";
+    String DISABLED = "0";
+    String ENABLE = "1";
+
 
 
     /** 企业可见状态: 0=不可见 1=可见 */

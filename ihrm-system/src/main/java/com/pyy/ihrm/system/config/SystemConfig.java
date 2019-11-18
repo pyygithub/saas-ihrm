@@ -1,6 +1,6 @@
 package com.pyy.ihrm.system.config;
 
-import com.pyy.ihrm.common.jwt.JwtInterceptor;
+import com.pyy.ihrm.common.token.jwt.JwtInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;

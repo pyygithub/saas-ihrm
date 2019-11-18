@@ -7,6 +7,14 @@ spring:
     serialization:
       #使用时间戳，使用数值timestamp表示日期
       write-dates-as-timestamps: true
+  #redis配置
+  redis:
+    database: 0
+    host: 10.10.50.230
+    port: 6379
+    password: 123456
+    timeout: 5000
+  #数据库连接池配置
   datasource:
     #1.JDBC
     type: com.alibaba.druid.pool.DruidDataSource

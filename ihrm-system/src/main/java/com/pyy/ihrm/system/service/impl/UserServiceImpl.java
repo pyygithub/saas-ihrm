@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pyy.ihrm.common.exception.CustomException;
-import com.pyy.ihrm.common.jwt.JwtConfig;
-import com.pyy.ihrm.common.jwt.JwtTokenUtil;
+import com.pyy.ihrm.common.token.TokenConfig;
+import com.pyy.ihrm.common.token.TokenService;
 import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.ResultCode;
 import com.pyy.ihrm.common.utils.SnowflakeId;
@@ -22,8 +22,10 @@ import com.pyy.ihrm.system.model.User;
 import com.pyy.ihrm.system.model.UserRole;
 import com.pyy.ihrm.system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -63,10 +65,13 @@ public class UserServiceImpl implements UserService {
     private PermissionMapper permissionMapper;
 
 	@Autowired
-    private JwtConfig jwtConfig;
+    private TokenConfig tokenConfig;
 
 	@Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenService tokenService;
+
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 用户保存
@@ -260,22 +265,39 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户登录
-     * @param username
-     * @param password
+     * @param loginUser
      */
     @Override
-    public String login(String username, String password) {
+    public String login(LoginUserVO loginUser) {
+        // 查询验证码
+        String code = stringRedisTemplate.opsForValue().get(loginUser.getUuid());
+        // 清除验证码
+        stringRedisTemplate.delete(loginUser.getUuid());
+        if (StringUtils.isBlank(code)) {
+            log.debug("### 验证码已过期 ###");
+            throw new CustomException(ResultCode.VALIDATE_CODE_EXPIRED);
+        }
+        if (StringUtils.isBlank(loginUser.getCode()) || !loginUser.getCode().equals(code)) {
+            log.debug("### 验证码错误 ###");
+            throw new CustomException(ResultCode.VALIDATE_CODE_INVALID);
+        }
+        // 根据用户查询用户
         Example userExample = new Example(User.class);
         userExample.createCriteria()
                 .andEqualTo("isDeleted", SystemConstants.UN_DELETED)
-                .andEqualTo("username", username);
+                .andEqualTo("username", loginUser.getUsername());
         User user = userMapper.selectOneByExample(userExample);
         // 登录失败
-        if (user == null || !SpringSecurityUtil.checkpassword(password, user.getPassword())) {
+        if (user == null || !SpringSecurityUtil.checkpassword(loginUser.getPassword(), user.getPassword())) {
             log.info("### 登录失败：用户不存在或密码错误 ###");
             throw new CustomException(ResultCode.USERNAME_OR_PASSWORD_ERROR);
         }
-        // 登录成功
+        // 用户状态
+        if (SystemConstants.DISABLED.equals(user.getEnableState())) {
+            log.info("### 账号已停用，请联系管理员 ###");
+            throw new CustomException(ResultCode.USER_ACCOUNT_FORBIDDEN);
+        }
+        // 登录成功：生成令牌
         else {
             // API权限字符串
             List<String> roleIds = this.getRoleIdsByUserId(user.getId());
@@ -285,8 +307,9 @@ public class UserServiceImpl implements UserService {
             extAttribute.put("apis", apis);
             extAttribute.put("companyId", user.getCompanyId());
             extAttribute.put("companyName", user.getCompanyName());
-            String token = jwtTokenUtil.createJWT(user.getId(), user.getUsername(), extAttribute, jwtConfig);
-            log.info("### 用户【username={}】登录成功 ###", username);
+            String token = tokenService.createToken(user.getId(), user.getUsername(), extAttribute, tokenConfig);
+            log.info("### 用户登录成功 ###");
+            // 返回token
             return token;
         }
     }
@@ -322,7 +345,7 @@ public class UserServiceImpl implements UserService {
         profileVO.setUsername(user.getUsername());
         profileVO.setMobile(user.getMobile());
         profileVO.setCompanyName(user.getCompanyName());
-        profileVO.setPermissions(permissions);
+        profileVO.setRoles(permissions);
         log.info("### 获取个人信息完毕：profileVO={} ###", profileVO);
 
         return profileVO;

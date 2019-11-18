@@ -182,10 +182,4 @@ public class SnowflakeId {
         return System.currentTimeMillis();
     }
 
-    public static void main(String[] args) {
-        Long i = getId();
-
-        System.out.println(i);
-    }
-
 }

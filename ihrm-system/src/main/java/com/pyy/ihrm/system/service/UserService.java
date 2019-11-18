@@ -73,10 +73,9 @@ public interface UserService {
 
     /**
      * 用户登录
-     * @param username
-     * @param password
+     * @param loginUser
      */
-    String login(String username, String password);
+    String login(LoginUserVO loginUser);
 
     /**
      * 获取个人信息

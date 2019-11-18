@@ -1,6 +1,5 @@
-package com.pyy.ihrm.system.controller;
+package com.pyy.ihrm.system.rest;
 
-import com.pyy.ihrm.common.response.QueryResult;
 import com.pyy.ihrm.common.response.Result;
 import com.pyy.ihrm.domain.system.vo.PermissionQueryConditionVO;
 import com.pyy.ihrm.domain.system.vo.PermissionSaveOrUpdateVO;
