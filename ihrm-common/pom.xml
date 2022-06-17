@@ -24,7 +24,7 @@
         <swagger.version>2.9.2</swagger.version>
         <swagger.model.version>1.5.21</swagger.model.version>
         <swagger.annotations.version>1.5.21</swagger.annotations.version>
-        <fastjson.version>1.2.58</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <lombok.version>1.16.16</lombok.version>
         <common.lang3.version>3.8.1</common.lang3.version>
         <jwt.version>0.9.0</jwt.version>
